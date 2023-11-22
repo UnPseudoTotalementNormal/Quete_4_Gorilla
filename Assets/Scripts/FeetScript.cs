@@ -20,7 +20,6 @@ public class FeetScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         p = GetComponentInParent<player>();
-        print(Random.Range(0, 300)) ;
         p.FeetTouched(collision, true);
     }
 
