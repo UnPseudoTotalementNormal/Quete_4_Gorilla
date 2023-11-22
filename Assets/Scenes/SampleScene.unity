@@ -473,6 +473,7 @@ MonoBehaviour:
   Left: {fileID: -8731717615006294662, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
   Right: {fileID: -6026944128040993771, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
   Shoot: {fileID: -5051700757941643723, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
+  MousePos: {fileID: -391296142053751541, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
 --- !u!212 &587185328
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -591,11 +592,35 @@ MonoBehaviour:
     m_ActionId: 1aea4c8e-c1f6-4c0b-aaa3-3baa57cc1a19
     m_ActionName: PlayerInput/Right[/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 587185327}
+        m_TargetAssemblyTypeName: player, Assembly-CSharp
+        m_MethodName: ShootFunction
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 2820d1eb-881d-4d1d-a066-ff0515635431
     m_ActionName: PlayerInput/Shoot[/Mouse/leftButton]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 587185327}
+        m_TargetAssemblyTypeName: player, Assembly-CSharp
+        m_MethodName: GetMousePosition
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: a15c1a6d-b8a0-4c3e-81d4-de3e5fc35706
     m_ActionName: PlayerInput/MousePos[/Mouse/position]
   m_NeverAutoSwitchControlSchemes: 0
@@ -653,7 +678,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
