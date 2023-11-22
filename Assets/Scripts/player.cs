@@ -25,12 +25,7 @@ public class player : MonoBehaviour
     }
 
     void FixedUpdate()
-    {
-        if (!OnGround)
-        {
-            RB.velocity -= new Vector2(0, (float)0.03);
-        }
-        
+    {   
         if (Left.action.inProgress)
         {
             
@@ -40,12 +35,6 @@ public class player : MonoBehaviour
         if (Right.action.inProgress)
         {
             RB.velocity = new Vector2((float)5, RB.velocity.y);
-        }
-
-        if (Shoot.action.inProgress)
-        {
-            balls.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 1) * 100;
-            Instantiate(balls, transform.position + new Vector3(1, 0, 0), transform.rotation);
         }
     }
 
@@ -61,5 +50,13 @@ public class player : MonoBehaviour
             RB.velocity += Vector2.up * 7;
         }
         
+    }
+
+    public void ShootFunction(InputAction.CallbackContext ctx)
+    {
+        if (ctx.phase == InputActionPhase.Started)
+        {
+            Instantiate(balls, transform.position + new Vector3(1, 0, 0), transform.rotation);
+        }
     }
 }
