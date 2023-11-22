@@ -57,12 +57,10 @@ public class player : MonoBehaviour
     {
         if (ctx.phase == InputActionPhase.Started)
         {
-            float shootX = GetComponent<Transform>().position.x;
-            float shootY = GetComponent<Transform>().position.y;
-            Vector2 shootvector = _mousepos - new Vector2(shootX, shootY);
+            Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
+            Vector2 shootvector = _mousepos - Ppos;
             GameObject newball;
-            print(_mousepos.x);
-            if (_mousepos.x >= 0.0f) { newball = Instantiate(balls, transform.position + new Vector3(1, 0, 0), transform.rotation); }
+            if (_mousepos.x >= Ppos.x) { newball = Instantiate(balls, transform.position + new Vector3(1, 0, 0), transform.rotation); }
             else { newball = Instantiate(balls, transform.position + new Vector3(-1, 0, 0), transform.rotation); }
 
             newball.GetComponent<BallScript>().SetAngle(shootvector);

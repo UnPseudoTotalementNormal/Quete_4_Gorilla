@@ -6,7 +6,6 @@ public class BallScript : MonoBehaviour
 {
     private Rigidbody2D RB;
     private Vector2 _awakevel;
-
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
@@ -15,14 +14,10 @@ public class BallScript : MonoBehaviour
     {
         RB = GetComponent<Rigidbody2D>();
     }
-
     void Update()
     {
         
     }
-
-
-
     public void SetAngle(Vector2 angle_vector)
     {
         angle_vector = angle_vector.normalized;
