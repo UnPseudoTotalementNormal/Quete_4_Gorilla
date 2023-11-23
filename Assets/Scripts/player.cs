@@ -39,7 +39,8 @@ public class player : MonoBehaviour
             RB.velocity = new Vector2(5f, RB.velocity.y);
         }
 
-        RB.velocity -= new Vector2(0.5f * RB.velocity.normalized.x, 0);
+        if (RB.velocity.magnitude < 1) RB.velocity -= new Vector2(RB.velocity.x, 0);
+        else RB.velocity -= new Vector2(0.5f * RB.velocity.normalized.x, 0);
     }
 
     public void FeetTouched(Collider2D collision, bool touched) 

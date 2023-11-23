@@ -19,7 +19,7 @@ public class EnnemiScript : MonoBehaviour
     private int _state = (int)STATE.Idle;
 
     private float _shoot_timer = 0;
-    private int _shoot_max_timer = 2; //in seconds
+    private int _shoot_max_timer = 5; //in seconds
 
     private float _angle = 0;
     private float _shoot_force;
@@ -30,7 +30,7 @@ public class EnnemiScript : MonoBehaviour
 
     private GameObject _target;
 
-    private int _se_iteration = 300;
+    private int _se_iteration = 500;
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
@@ -53,12 +53,17 @@ public class EnnemiScript : MonoBehaviour
                 break;
 
             case (int)STATE.TestingShooting:
-                TestShooting();
+                for (int i = 0; i < 100; i++)
+                {
+                    TestShooting();
+                    if (_state != (int)STATE.TestingShooting) break;
+                }
                 break;
         }
     }
     private void WaitShooting()
     {
+        DrawDebugShooting();
         _shoot_timer += Time.deltaTime;
         if (_shoot_timer > _shoot_max_timer ) 
         {
@@ -68,10 +73,10 @@ public class EnnemiScript : MonoBehaviour
     private void TestShooting()
     {
         DrawDebugShooting();
-        _angle += 0.05f;
+        _angle += 0.001f;
         if (_angle > 3 * Math.PI/2)
         {
-            _angle = (float)Math.PI/2;
+            _angle = (float)Math.PI/2.2f;
             _shoot_force += 1;
         }
 
@@ -80,15 +85,29 @@ public class EnnemiScript : MonoBehaviour
         Vector2 _shoot_vector = new Vector2((float)Math.Cos(_angle), (float)Math.Sin(_angle));
         _shoot_vector *= _shoot_force;
         _se_velocity = _shoot_vector;
-
+        
         for (int i = 0; i < _se_iteration; i++)
         {
-            if (_se_position.y > -4)
+            if (_se_position.y < -4)
             {
-                _se_oldpos.Add(_se_position);
+                break;
             }
+
+            _se_oldpos.Add(_se_position);
+
             _se_position += _se_velocity * Time.fixedDeltaTime;
-            _se_velocity += new Vector2(0, -9.81f) * Time.fixedDeltaTime;
+            _se_velocity += new Vector2(0, -9.80665f) * Time.fixedDeltaTime;
+
+            var _raycast = Physics2D.CircleCast(_se_position, 0.5f, _se_velocity.normalized, 0.5f);
+
+            if (_raycast.collider != null)
+            {
+                if (_raycast.collider.GetComponent<BoxCollider2D>() != null) 
+                {
+                    break;
+                }
+            }
+
             if (_target.GetComponent<CapsuleCollider2D>().OverlapPoint(_se_position))
             {
                 Shoot(_shoot_vector);
@@ -101,7 +120,7 @@ public class EnnemiScript : MonoBehaviour
     {
         _angle = (float)Math.PI / 2;
         _shoot_timer = 0;
-        _shoot_force = 1;
+        _shoot_force = 5;
         _state = (int)STATE.TestingShooting;
         
     }
@@ -115,7 +134,7 @@ public class EnnemiScript : MonoBehaviour
 
     private void Shoot(Vector2 shootvector)
     {
-        GameObject newball = Instantiate(balls, transform.position + new Vector3(-1, 0, 0), transform.rotation);
-        newball.GetComponent<BallScript>().SetAngle(shootvector.normalized, shootvector.magnitude);
+        GameObject newball = Instantiate(balls, transform.position, transform.rotation);
+        newball.GetComponent<BallScript>().SetAngle(shootvector, 1.01f);
     }
 }

@@ -535,7 +535,7 @@ Transform:
   m_GameObject: {fileID: 587185326}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.44, y: 2.35, z: 0}
+  m_LocalPosition: {x: -3.95, y: 0.15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -814,8 +814,8 @@ Transform:
   m_GameObject: {fileID: 932406644}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.88, y: -0.27, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -1.9962, y: 1.5285, z: 0}
+  m_LocalScale: {x: 1.3277259, y: 7.284997, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -833,7 +833,7 @@ GameObject:
   - component: {fileID: 1910592108}
   - component: {fileID: 1910592107}
   - component: {fileID: 1910592106}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ennemi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
