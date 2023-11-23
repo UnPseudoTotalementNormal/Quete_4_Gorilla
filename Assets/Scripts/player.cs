@@ -38,6 +38,8 @@ public class player : MonoBehaviour
         {
             RB.velocity = new Vector2(5f, RB.velocity.y);
         }
+
+        RB.velocity -= new Vector2(0.5f * RB.velocity.normalized.x, 0);
     }
 
     public void FeetTouched(Collider2D collision, bool touched) 
@@ -49,7 +51,7 @@ public class player : MonoBehaviour
     {
         if (ctx.phase == InputActionPhase.Started && OnGround)
         {
-            RB.velocity += Vector2.up * 7;
+            RB.velocity += Vector2.up * 14;
         }
         
     }
@@ -63,7 +65,7 @@ public class player : MonoBehaviour
             if (_mousepos.x >= Ppos.x) { newball = Instantiate(balls, transform.position + new Vector3(1, 0, 0), transform.rotation); }
             else { newball = Instantiate(balls, transform.position + new Vector3(-1, 0, 0), transform.rotation); }
 
-            newball.GetComponent<BallScript>().SetAngle(shootvector);
+            newball.GetComponent<BallScript>().SetAngle(shootvector, 10);
         }
     }
 

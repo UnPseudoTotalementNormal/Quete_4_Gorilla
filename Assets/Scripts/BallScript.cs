@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BallScript : MonoBehaviour
@@ -12,16 +14,21 @@ public class BallScript : MonoBehaviour
     }
     void Start()
     {
-        RB = GetComponent<Rigidbody2D>();
     }
     void Update()
     {
         
     }
-    public void SetAngle(Vector2 angle_vector)
+    private void FixedUpdate()
     {
-        angle_vector = angle_vector.normalized;
-        _awakevel = angle_vector * 10;
+        if (RB.position.y < -4)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+    public void SetAngle(Vector2 angle_vector, float force)
+    {
+        _awakevel = angle_vector * force;
         RB.velocity = _awakevel;
     }
 }

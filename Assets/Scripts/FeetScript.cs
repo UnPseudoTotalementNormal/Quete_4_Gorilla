@@ -6,6 +6,7 @@ public class FeetScript : MonoBehaviour
 {
     // Start is called before the first frame update
     private player p;
+    
     void Start()
     {
         
@@ -17,7 +18,7 @@ public class FeetScript : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         p = GetComponentInParent<player>();
         p.FeetTouched(collision, true);
