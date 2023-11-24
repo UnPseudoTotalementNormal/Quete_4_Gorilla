@@ -66,7 +66,7 @@ public class player : MonoBehaviour
             if (_mousepos.x >= Ppos.x) { newball = Instantiate(balls, transform.position + new Vector3(1, 0, 0), transform.rotation); }
             else { newball = Instantiate(balls, transform.position + new Vector3(-1, 0, 0), transform.rotation); }
 
-            newball.GetComponent<BallScript>().SetAngle(shootvector, 10);
+            newball.GetComponent<BallScript>().SetAngle(shootvector.normalized, 10);
         }
     }
 
