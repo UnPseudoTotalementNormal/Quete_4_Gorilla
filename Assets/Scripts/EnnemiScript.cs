@@ -30,7 +30,7 @@ public class EnnemiScript : MonoBehaviour
 
     private GameObject _target;
 
-    private int _se_iteration = 500;
+    private int _se_iteration = 400;
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
@@ -53,7 +53,7 @@ public class EnnemiScript : MonoBehaviour
                 break;
 
             case (int)STATE.TestingShooting:
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 200; i++)
                 {
                     TestShooting();
                     if (_state != (int)STATE.TestingShooting) break;
