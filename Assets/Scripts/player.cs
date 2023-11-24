@@ -65,7 +65,7 @@ public class player : MonoBehaviour
             Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
             Vector2 shootvector = _mousepos - Ppos;
             GameObject newball;
-            newball = Instantiate(balls, transform.position + new Vector3(1, 0, 0), transform.rotation);
+            newball = Instantiate(balls, transform.position, transform.rotation);
 
             newball.GetComponent<BallScript>().SetAngle(shootvector.normalized, 10);
         }
