@@ -31,6 +31,8 @@ public class EnnemiScript : MonoBehaviour
     private GameObject _target;
 
     private int _se_iteration = 400;
+
+    private int _min_height = -13;
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
@@ -88,7 +90,7 @@ public class EnnemiScript : MonoBehaviour
         
         for (int i = 0; i < _se_iteration; i++)
         {
-            if (_se_position.y < -4)
+            if (_se_position.y < _min_height)
             {
                 break;
             }

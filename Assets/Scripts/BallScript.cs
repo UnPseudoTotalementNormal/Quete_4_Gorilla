@@ -8,6 +8,8 @@ public class BallScript : MonoBehaviour
 {
     private Rigidbody2D RB;
     private Vector2 _awakevel;
+
+    private int min_height = -13;
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
@@ -21,7 +23,7 @@ public class BallScript : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (RB.position.y < -4)
+        if (RB.position.y < min_height)
         {
             Destroy(this.gameObject);
         }
