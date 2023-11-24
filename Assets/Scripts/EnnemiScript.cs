@@ -75,7 +75,7 @@ public class EnnemiScript : MonoBehaviour
     private void TestShooting()
     {
         DrawDebugShooting();
-        _angle += 0.001f;
+        _angle += 0.0015f;
         if (_angle > 3 * Math.PI/2)
         {
             _angle = (float)Math.PI/2.2f;
@@ -137,6 +137,6 @@ public class EnnemiScript : MonoBehaviour
     private void Shoot(Vector2 shootvector)
     {
         GameObject newball = Instantiate(balls, transform.position, transform.rotation);
-        newball.GetComponent<BallScript>().SetAngle(shootvector, 1.01f);
+        newball.GetComponent<BallScript>().SetAngle(shootvector, 1.008f);
     }
 }
