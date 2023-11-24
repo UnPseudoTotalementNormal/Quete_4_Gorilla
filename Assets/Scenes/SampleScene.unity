@@ -842,6 +842,7 @@ MonoBehaviour:
   height: -10
   minHeight: 0
   maxHeight: -7
+  maxVariation: 0
   repeatNum: 3
   Dirt: {fileID: 8743190320847092179, guid: 75f1c531f199fad4dbf836526bcab978, type: 3}
   Grass: {fileID: 5939134577841790222, guid: 0d0d2782de2c00741a8429104b1bb158, type: 3}
@@ -1234,7 +1235,7 @@ Transform:
   m_GameObject: {fileID: 1876533102}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.718474, y: 4.5605645, z: 0.96359724}
+  m_LocalPosition: {x: 34.4, y: 4.5605645, z: 0.96359724}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1288,7 +1289,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

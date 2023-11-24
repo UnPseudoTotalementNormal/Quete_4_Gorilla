@@ -33,4 +33,25 @@ public class BallScript : MonoBehaviour
         _awakevel = angle_vector * force;
         RB.velocity = _awakevel;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+        if (collision.tag == "Map")
+        {
+            if (collision.GetComponent<Rigidbody2D>() == null) 
+            {
+                collision.AddComponent<Rigidbody2D>();
+                PhysicsMaterial2D mapmaterial = new PhysicsMaterial2D();
+                mapmaterial.bounciness = .5f;
+                collision.GetComponent<Rigidbody2D>().sharedMaterial = mapmaterial;
+            }
+            Rigidbody2D maprb = collision.GetComponent<Rigidbody2D>();
+            Vector2 dist = collision.GetComponent<Transform>().position - GetComponent<Transform>().position;
+            //maprb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            maprb.velocity = dist.normalized * 10;
+            maprb.angularVelocity = Random.Range(-200, 200);
+        }
+        Destroy(this.gameObject);
+    }
 }
