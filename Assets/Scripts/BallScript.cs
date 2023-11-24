@@ -13,6 +13,7 @@ public class BallScript : MonoBehaviour
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
+        print(RB.excludeLayers);
     }
     void Start()
     {

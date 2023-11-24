@@ -22,8 +22,6 @@ public class MapScript : MonoBehaviour
 
         }
     }
-
-    // Update is called once per frame
     void Update()
     {
         

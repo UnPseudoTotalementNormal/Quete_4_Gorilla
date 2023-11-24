@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
 using System;
 using System.Runtime.CompilerServices;
+using UnityEngine.SceneManagement;
 
 public class player : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class player : MonoBehaviour
     void Start()
     {
         RB = GetComponent<Rigidbody2D>();
+        //SceneManager.LoadScene("Scenes/MainMenu");
     }
 
     void Update()

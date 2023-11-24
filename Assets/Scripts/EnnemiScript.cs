@@ -11,6 +11,7 @@ public class EnnemiScript : MonoBehaviour
     {
         Idle,
         TestingShooting,
+        Moving,
     }
 
     [SerializeField] private GameObject balls;
