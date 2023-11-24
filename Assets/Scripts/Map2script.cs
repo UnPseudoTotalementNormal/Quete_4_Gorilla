@@ -17,11 +17,13 @@ public class Map2script : MonoBehaviour
     void Generation()
     {
         int repeatValue = 0;
+        height = Random.Range(minHeight, maxHeight);
         for (int x = -25; x < width; x++)
         {
             if (repeatValue == 0)
             {
-                height = Random.Range(minHeight, maxHeight);
+                height = Random.Range(Mathf.Clamp(height - maxVariation, maxHeight, minHeight), Mathf.Clamp(height + maxVariation, maxHeight, minHeight));
+                //height = Random.Range(minHeight, maxHeight);
                 GenerateFlatPlatform(x);
                 repeatValue = repeatNum;
             }

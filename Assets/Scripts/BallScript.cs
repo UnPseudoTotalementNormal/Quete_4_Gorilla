@@ -48,7 +48,6 @@ public class BallScript : MonoBehaviour
             }
             Rigidbody2D maprb = collision.GetComponent<Rigidbody2D>();
             Vector2 dist = collision.GetComponent<Transform>().position - GetComponent<Transform>().position;
-            //maprb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             maprb.velocity = dist.normalized * 10;
             maprb.angularVelocity = Random.Range(-200, 200);
         }

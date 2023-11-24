@@ -838,11 +838,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 491dfad92aff7e24eab7fbafe81b9ab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 30
-  height: -10
+  width: 26
+  height: 10
   minHeight: 0
   maxHeight: -7
-  maxVariation: 0
+  maxVariation: 2
   repeatNum: 3
   Dirt: {fileID: 8743190320847092179, guid: 75f1c531f199fad4dbf836526bcab978, type: 3}
   Grass: {fileID: 5939134577841790222, guid: 0d0d2782de2c00741a8429104b1bb158, type: 3}
@@ -855,7 +855,7 @@ Transform:
   m_GameObject: {fileID: 840675230}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.20492943, y: -4.082362, z: 0.8985885}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1141,7 +1141,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a4337a9e97c4ac84aad2a8ce828c4fb2, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
