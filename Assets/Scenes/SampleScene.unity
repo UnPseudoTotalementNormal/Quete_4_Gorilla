@@ -849,6 +849,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 491dfad92aff7e24eab7fbafe81b9ab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startX: -25
+  startY: -15
   width: 60
   height: 10
   minHeight: 3

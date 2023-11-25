@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Map2script : MonoBehaviour
 {
+    [SerializeField] int startX, startY;
     [SerializeField] int width, height;
     [SerializeField] int minHeight, maxHeight;
     [SerializeField] int maxVariation;
@@ -11,14 +12,37 @@ public class Map2script : MonoBehaviour
     [SerializeField] GameObject Dirt, Grass;
     void Start()
     {
+        PreGeneration();
         Generation();
+        PostGeneration();
     }
 
+    void PreGeneration()
+    {
+        int x = startX - 5;
+        height = maxHeight + 30;
+        while (x < startX) 
+        {
+            GenerateFlatPlatform(x);
+            x++;
+        }
+    }
+
+    void PostGeneration()
+    {
+        int x = width;
+        height = maxHeight + 30;
+        while (x < width + 5)
+        {
+            GenerateFlatPlatform(x);
+            x++;
+        }
+    }
     void Generation()
     {
         int repeatValue = 0;
         height = Random.Range(minHeight, maxHeight);
-        for (int x = -25; x < width; x++)
+        for (int x = startX; x < width; x++)
         {
             if (repeatValue == 0)
             {
@@ -37,7 +61,7 @@ public class Map2script : MonoBehaviour
 
     void GenerateFlatPlatform(int x)
     {
-        for (int y = -15; y < height; y++)
+        for (int y = startY; y < height; y++)
         {
             SpawnObj(Dirt, x, y);
         }
