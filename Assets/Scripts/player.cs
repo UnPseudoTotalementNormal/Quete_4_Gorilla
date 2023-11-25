@@ -11,6 +11,8 @@ using UnityEngine.SceneManagement;
 public class player : MonoBehaviour
 {
 
+    private GameObject gamemanager;
+
     private Rigidbody2D RB;
     private bool OnGround;
     private Vector2 _mousepos;
@@ -20,6 +22,7 @@ public class player : MonoBehaviour
 
     void Start()
     {
+        gamemanager = GameObject.Find("GameManager");
         RB = GetComponent<Rigidbody2D>();
         //SceneManager.LoadScene("Scenes/MainMenu");
     }
@@ -68,6 +71,8 @@ public class player : MonoBehaviour
             newball = Instantiate(balls, transform.position, transform.rotation);
 
             newball.GetComponent<BallScript>().SetAngle(shootvector.normalized, 10);
+
+            gamemanager.GetComponent<GameScript>().EndTurn();
         }
     }
 
