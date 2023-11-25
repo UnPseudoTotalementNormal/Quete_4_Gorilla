@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class ParallaxBackground : MonoBehaviour
 {
     // Start is called before the first frame update
+    private Vector2 cloudoffset = Vector2.zero;
     void Start()
     {
         
@@ -17,12 +19,13 @@ public class ParallaxBackground : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             Transform background = transform.GetChild(i);
+            float dist = Camera.main.transform.position.x;
             if (background.tag == "Cloud")
             {
-                background.GetComponent<Renderer>().material.mainTextureOffset += ((Vector2.right * 2) / background.transform.position.z) * Time.deltaTime;
+                cloudoffset += ((Vector2.right * 2) / background.transform.position.z) * Time.deltaTime;
+                background.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", Vector2.right * dist / background.transform.position.z + cloudoffset);
                 continue;
             } 
-            float dist = Camera.main.transform.position.x;
             background.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", Vector2.right * dist / background.transform.position.z);
         }
     }
