@@ -7,6 +7,8 @@ using System;
 
 public class EnnemiScript : MonoBehaviour
 {
+    private GameObject gamemanager;
+    private bool _myturn = false;
     private enum STATE
     {
         Idle,
@@ -41,14 +43,13 @@ public class EnnemiScript : MonoBehaviour
     }
     void Start()
     {
-
-    }
-    void Update()
-    {
-
+        gamemanager = GameObject.Find("GameManager");
     }
     private void FixedUpdate()
     {
+        turncheck();
+        if (!_myturn) { return; }
+
         switch (_state)
         {
             case (int)STATE.Idle:
@@ -139,5 +140,12 @@ public class EnnemiScript : MonoBehaviour
     {
         GameObject newball = Instantiate(balls, transform.position, transform.rotation);
         newball.GetComponent<BallScript>().SetAngle(shootvector, 1.008f);
+
+        gamemanager.GetComponent<GameScript>().EndTurn();
+    }
+
+    private void turncheck()
+    {
+        _myturn = (gamemanager.GetComponent<GameScript>().Memberturn == this.gameObject);
     }
 }

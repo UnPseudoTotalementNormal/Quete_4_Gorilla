@@ -10,8 +10,8 @@ using UnityEngine.SceneManagement;
 
 public class player : MonoBehaviour
 {
-
     private GameObject gamemanager;
+    private bool _myturn = false;
 
     private Rigidbody2D RB;
     private bool OnGround;
@@ -32,7 +32,13 @@ public class player : MonoBehaviour
     }
 
     void FixedUpdate()
-    {   
+    {
+        if (RB.velocity.magnitude < 1) RB.velocity -= new Vector2(RB.velocity.x, 0);
+        else RB.velocity -= new Vector2(0.5f * RB.velocity.normalized.x, 0);
+
+        turncheck();
+        if (!_myturn) { return; }
+
         if (Left.action.inProgress)
         {
             
@@ -43,9 +49,6 @@ public class player : MonoBehaviour
         {
             RB.velocity = new Vector2(5f, RB.velocity.y);
         }
-
-        if (RB.velocity.magnitude < 1) RB.velocity -= new Vector2(RB.velocity.x, 0);
-        else RB.velocity -= new Vector2(0.5f * RB.velocity.normalized.x, 0);
     }
 
     public void FeetTouched(Collider2D collision, bool touched) 
@@ -55,7 +58,7 @@ public class player : MonoBehaviour
 
     public void JumpFunction(InputAction.CallbackContext ctx)
     {
-        if (ctx.phase == InputActionPhase.Started && OnGround)
+        if (ctx.phase == InputActionPhase.Started && OnGround && _myturn)
         {
             RB.velocity += Vector2.up * 14;
         }
@@ -63,7 +66,7 @@ public class player : MonoBehaviour
     }
     public void ShootFunction(InputAction.CallbackContext ctx)
     {
-        if (ctx.phase == InputActionPhase.Started)
+        if (ctx.phase == InputActionPhase.Started && _myturn)
         {
             Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
             Vector2 shootvector = _mousepos - Ppos;
@@ -80,5 +83,10 @@ public class player : MonoBehaviour
     {
         _mousepos = ctx.ReadValue<Vector2>();
         _mousepos = Camera.main.ScreenToWorldPoint(_mousepos);
+    }
+
+    private void turncheck()
+    {
+        _myturn = (gamemanager.GetComponent<GameScript>().Memberturn == this.gameObject);
     }
 }

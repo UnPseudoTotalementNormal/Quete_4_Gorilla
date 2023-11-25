@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class GameScript : MonoBehaviour
 {
-    private GameObject Memberturn;
+    public GameObject Memberturn;
     private string teamturn;
     private int numturn = 1;
 
