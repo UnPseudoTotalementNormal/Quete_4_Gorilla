@@ -24,7 +24,6 @@ public class player : MonoBehaviour
     {
         gamemanager = GameObject.Find("GameManager");
         RB = GetComponent<Rigidbody2D>();
-        //SceneManager.LoadScene("Scenes/MainMenu");
     }
 
     void Update()
