@@ -74,7 +74,7 @@ public class player : MonoBehaviour
 
             newball.GetComponent<BallScript>().SetAngle(shootvector.normalized, 10);
 
-            gamemanager.GetComponent<GameScript>().EndTurn();
+            gamemanager.GetComponent<GameScript>().EndTurn(newball);
         }
     }
 

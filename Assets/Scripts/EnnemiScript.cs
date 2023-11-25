@@ -22,7 +22,7 @@ public class EnnemiScript : MonoBehaviour
     private int _state = (int)STATE.Idle;
 
     private float _shoot_timer = 0;
-    private int _shoot_max_timer = 5; //in seconds
+    private int _shoot_max_timer = 1; //in seconds
 
     private float _angle = 0;
     private float _shoot_force;
@@ -141,7 +141,7 @@ public class EnnemiScript : MonoBehaviour
         GameObject newball = Instantiate(balls, transform.position, transform.rotation);
         newball.GetComponent<BallScript>().SetAngle(shootvector, 1.008f);
 
-        gamemanager.GetComponent<GameScript>().EndTurn();
+        gamemanager.GetComponent<GameScript>().EndTurn(newball);
     }
 
     private void turncheck()

@@ -11,6 +11,9 @@ public class GameScript : MonoBehaviour
     private string teamturn;
     private int numturn = 1;
 
+    private GameObject following_object;
+    private bool was_following = false;
+
     private Camera cam;
     private float camZ;
 
@@ -18,13 +21,18 @@ public class GameScript : MonoBehaviour
     {
         cam = Camera.main;
         camZ = cam.transform.position.z;
-        ChangeTeam();
-        GetMember();
+        EndTurn();
     }
 
-    public void EndTurn()
+    public void EndTurn(GameObject follow_this = null)
     {
         Memberturn = null;
+        if (follow_this != null)
+        {
+            was_following = true;
+            following_object = follow_this;
+            return;
+        }
         StartCoroutine(CodeAfterDelay(NextTurn, 3f));
         
     }
@@ -68,7 +76,25 @@ public class GameScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        cam.transform.position = Vector3.Lerp(cam.transform.position, Memberturn.transform.position, 3f * Time.fixedDeltaTime);
+        if (following_object !=  null)
+        {
+            CameraFollow(following_object);
+        }
+        else if (was_following)
+        {
+            was_following = false;
+            StartCoroutine(CodeAfterDelay(NextTurn, 3f));
+        }
+
+        if (Memberturn != null)
+        {
+            CameraFollow(Memberturn);
+        }
+    }
+
+    private void CameraFollow(GameObject following)
+    {
+        cam.transform.position = Vector3.Lerp(cam.transform.position, following.transform.position, 3f * Time.fixedDeltaTime);
         cam.transform.position += new Vector3(0, 0, -cam.transform.position.z + camZ);
     }
 }
