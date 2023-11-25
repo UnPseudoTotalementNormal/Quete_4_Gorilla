@@ -37,7 +37,7 @@ public class EnnemiScript : MonoBehaviour
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
-        _target = GameObject.Find("Player");
+        _target = GameObject.Find("Player1");
     }
     void Start()
     {
