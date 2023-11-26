@@ -94,7 +94,7 @@ public class GameScript : MonoBehaviour
 
     private void CameraFollow(GameObject following)
     {
-        cam.transform.position = Vector3.Lerp(cam.transform.position, following.transform.position, 3f * Time.fixedDeltaTime);
+        cam.transform.position = Vector3.Lerp(cam.transform.position, following.transform.position, 4f * Time.fixedDeltaTime);
         cam.transform.position += new Vector3(0, 0, -cam.transform.position.z + camZ);
     }
 }
