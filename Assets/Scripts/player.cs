@@ -29,8 +29,8 @@ public class player : MonoBehaviour
     private float _mouseangle;
 
     private float _currentforce = 0;
-    private float _maxforce = 20;
-    private float _charingspeed = 10; //per sec
+    [SerializeField] private float _maxforce = 10;
+    [SerializeField] private float _chargingspeed = 10; //per sec
 
     [SerializeField] private GameObject balls;
     [SerializeField] private InputActionReference Jump, Left, Right, Shoot, Aim, MousePos;
@@ -76,7 +76,7 @@ public class player : MonoBehaviour
                 break;
 
             case STATE.Charging:
-                _currentforce += _charingspeed * Time.fixedDeltaTime;
+                _currentforce += _chargingspeed * Time.fixedDeltaTime;
                 transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, ((_maxforce - _currentforce) / (_maxforce - 0)) * 100, 0);
                 if (_currentforce >= _maxforce)
                 {
