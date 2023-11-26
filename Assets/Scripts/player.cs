@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using System;
 using System.Runtime.CompilerServices;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class player : MonoBehaviour
 {
@@ -16,7 +17,8 @@ public class player : MonoBehaviour
     private enum STATE
     {
         Normal,
-        Charging
+        Charging,
+        Aiming,
     }
 
     private STATE _state = STATE.Normal;
@@ -24,6 +26,7 @@ public class player : MonoBehaviour
     private Rigidbody2D RB;
     private bool OnGround;
     private Vector2 _mousepos;
+    private float _mouseangle;
 
     private float _currentforce = 0;
     private float _maxforce = 20;
@@ -50,13 +53,9 @@ public class player : MonoBehaviour
         turncheck();
         if (!_myturn) 
         {
-            switch (_state)
-            {
-                case STATE.Charging:
-                    ShootFunction();
-                    break;
-            }
             _state = STATE.Normal;
+            _currentforce = 0;
+            transform.Find("Canvas").Find("ChargingBar").gameObject.SetActive(false);
             return; 
         }
 
@@ -78,11 +77,16 @@ public class player : MonoBehaviour
 
             case STATE.Charging:
                 _currentforce += _charingspeed * Time.fixedDeltaTime;
+                transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, ((_maxforce - _currentforce) / (_maxforce - 0)) * 100, 0);
                 if (_currentforce >= _maxforce)
                 {
                     _state = STATE.Normal;
                     ShootFunction();
                 }
+                break;
+            case STATE.Aiming:
+                transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, 100, 0);
+                transform.Find("Canvas").transform.rotation = Quaternion.Euler(Vector3.forward * _mouseangle);
                 break;
         }
     }
@@ -94,9 +98,10 @@ public class player : MonoBehaviour
 
     public void JumpInput(InputAction.CallbackContext ctx)
     {
+        if (!_myturn) { return; }
         if (_state == STATE.Normal)
         {
-            if (ctx.phase == InputActionPhase.Started && OnGround && _myturn)
+            if (ctx.phase == InputActionPhase.Started && OnGround)
             {
                 gamemanager.GetComponent<GameScript>().ActionTimer();
                 RB.velocity += Vector2.up * 14;
@@ -105,15 +110,34 @@ public class player : MonoBehaviour
     }
     public void ShootInput(InputAction.CallbackContext ctx)
     {
-        if (ctx.phase == InputActionPhase.Started && _myturn)
+        if (!_myturn) { return; }
+
+        if (ctx.phase == InputActionPhase.Started && _state == STATE.Aiming)
         {
             _currentforce = 0;
             _state = STATE.Charging;
         }
-        if (ctx.phase == InputActionPhase.Canceled && _myturn)
+        if (ctx.phase == InputActionPhase.Canceled && _state == STATE.Charging)
         {
             _state = STATE.Normal;
             ShootFunction();
+        }
+    }
+
+    public void AimInput(InputAction.CallbackContext ctx)
+    {
+        if (!_myturn) { return; }
+        switch (ctx.phase)
+        {
+            case InputActionPhase.Started:
+                _state = STATE.Aiming;
+                transform.Find("Canvas").Find("ChargingBar").gameObject.SetActive(true);
+                break;
+            case InputActionPhase.Canceled:
+                _state = STATE.Normal;
+                _currentforce = 0;
+                transform.Find("Canvas").Find("ChargingBar").gameObject.SetActive(false);
+                break;
         }
     }
 
@@ -132,6 +156,10 @@ public class player : MonoBehaviour
     {
         _mousepos = ctx.ReadValue<Vector2>();
         _mousepos = Camera.main.ScreenToWorldPoint(_mousepos);
+
+        Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
+        _mouseangle = Mathf.Atan2(_mousepos.y - Ppos.y, _mousepos.x - Ppos.x);
+        _mouseangle *= Mathf.Rad2Deg; 
     }
 
     private void turncheck()
