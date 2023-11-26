@@ -40,12 +40,13 @@ public class player : MonoBehaviour
 
         if (Left.action.inProgress)
         {
-            
+            gamemanager.GetComponent<GameScript>().ActionTimer();
             RB.velocity = new Vector2(-5f, RB.velocity.y); 
         }
 
         if (Right.action.inProgress)
         {
+            gamemanager.GetComponent<GameScript>().ActionTimer();
             RB.velocity = new Vector2(5f, RB.velocity.y);
         }
     }
@@ -59,6 +60,7 @@ public class player : MonoBehaviour
     {
         if (ctx.phase == InputActionPhase.Started && OnGround && _myturn)
         {
+            gamemanager.GetComponent<GameScript>().ActionTimer();
             RB.velocity += Vector2.up * 14;
         }
         

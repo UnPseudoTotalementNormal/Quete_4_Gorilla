@@ -10,6 +10,10 @@ public class GameScript : MonoBehaviour
 {
     private GameObject HUD;
 
+    public float timer;
+    [SerializeField] private float maxtimer = 15;
+    [SerializeField] private float timerafteraction = 5;
+
     public GameObject Memberturn;
     private string teamturn;
     private int numturn = 1;
@@ -31,17 +35,40 @@ public class GameScript : MonoBehaviour
     private void UpdateHUD()
     {
         TextMeshProUGUI hudturn = HUD.transform.Find("TextTurn").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI hudtimer = HUD.transform.Find("TextTimer").GetComponent<TextMeshProUGUI>();
         if (Memberturn != null)
         {
             hudturn.text = teamturn + " " + numturn.ToString() + " turn";
+            hudtimer.text = ((int)timer).ToString();
         }
         else
         {
             hudturn.text = " ";
+            hudtimer.text = " ";
         }
         
     }
 
+    private void RestartTimer()
+    {
+        timer = maxtimer;
+    }
+
+    private void RunTimer()
+    {
+        timer -= 1 * Time.fixedDeltaTime;
+        if (timer <= 0)
+        {
+            EndTurn();
+        }
+    }
+    public void ActionTimer()
+    {
+        if (timer > timerafteraction)
+        {
+            timer = timerafteraction;
+        }
+    }
     public void EndTurn(GameObject follow_this = null)
     {
         Memberturn = null;
@@ -57,6 +84,7 @@ public class GameScript : MonoBehaviour
 
     private void NextTurn()
     {
+        RestartTimer();
         numturn++;
         if (GetMember() == null)
         {
@@ -108,6 +136,7 @@ public class GameScript : MonoBehaviour
         if (Memberturn != null)
         {
             CameraFollow(Memberturn);
+            RunTimer();
         }
     }
 
