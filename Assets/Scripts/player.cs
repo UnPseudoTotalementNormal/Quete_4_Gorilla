@@ -17,8 +17,13 @@ public class player : MonoBehaviour
     private bool OnGround;
     private Vector2 _mousepos;
 
+    private float _currentforce = 0;
+    private float _maxforce = 20;
+    private bool _chargingshot = false;
+    private float _charingspeed = 10; //per sec
+
     [SerializeField] private GameObject balls;
-    [SerializeField] private InputActionReference Jump, Left, Right, Shoot, MousePos;
+    [SerializeField] private InputActionReference Jump, Left, Right, Shoot, Aim, MousePos;
 
     void Start()
     {
@@ -38,16 +43,25 @@ public class player : MonoBehaviour
         turncheck();
         if (!_myturn) { return; }
 
-        if (Left.action.inProgress)
+        if (Left.action.inProgress && !_chargingshot)
         {
             gamemanager.GetComponent<GameScript>().ActionTimer();
             RB.velocity = new Vector2(-5f, RB.velocity.y); 
         }
 
-        if (Right.action.inProgress)
+        if (Right.action.inProgress && !_chargingshot)
         {
             gamemanager.GetComponent<GameScript>().ActionTimer();
             RB.velocity = new Vector2(5f, RB.velocity.y);
+        }
+
+        if (_chargingshot)
+        {
+            _currentforce += _charingspeed * Time.fixedDeltaTime;
+            if (_currentforce >= _maxforce)
+            {
+                ShootFunction();
+            }
         }
     }
 
@@ -56,28 +70,37 @@ public class player : MonoBehaviour
         OnGround = touched;
     }
 
-    public void JumpFunction(InputAction.CallbackContext ctx)
+    public void JumpInput(InputAction.CallbackContext ctx)
     {
-        if (ctx.phase == InputActionPhase.Started && OnGround && _myturn)
+        if (ctx.phase == InputActionPhase.Started && OnGround && !_chargingshot && _myturn)
         {
             gamemanager.GetComponent<GameScript>().ActionTimer();
             RB.velocity += Vector2.up * 14;
         }
         
     }
-    public void ShootFunction(InputAction.CallbackContext ctx)
+    public void ShootInput(InputAction.CallbackContext ctx)
     {
         if (ctx.phase == InputActionPhase.Started && _myturn)
         {
-            Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
-            Vector2 shootvector = _mousepos - Ppos;
-            GameObject newball;
-            newball = Instantiate(balls, transform.position, transform.rotation);
-
-            newball.GetComponent<BallScript>().SetAngle(shootvector.normalized, 10);
-
-            gamemanager.GetComponent<GameScript>().EndTurn(newball);
+            _chargingshot = true;
         }
+        if (ctx.phase == InputActionPhase.Canceled && _myturn)
+        {
+            ShootFunction();
+        }
+    }
+
+    private void ShootFunction()
+    {
+        _chargingshot = false;
+        Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
+        Vector2 shootvector = _mousepos - Ppos;
+        GameObject newball;
+        newball = Instantiate(balls, transform.position, transform.rotation);
+
+        newball.GetComponent<BallScript>().SetAngle(shootvector.normalized, _currentforce);
+        gamemanager.GetComponent<GameScript>().EndTurn(newball);
     }
 
     public void GetMousePosition(InputAction.CallbackContext ctx)
