@@ -21,7 +21,7 @@ public class EnnemiScript : MonoBehaviour
     [SerializeField] private GameObject balls;
 
     private Rigidbody2D RB;
-    private int _state = (int)STATE.Idle;
+    private STATE _state = STATE.Idle;
 
     private float _shoot_timer = 0;
     private int _shoot_max_timer = 1; //in seconds
@@ -54,15 +54,15 @@ public class EnnemiScript : MonoBehaviour
 
         switch (_state)
         {
-            case (int)STATE.Idle:
+            case STATE.Idle:
                 WaitShooting();
                 break;
 
-            case (int)STATE.TestingShooting:
+            case STATE.TestingShooting:
                 for (int i = 0; i < 200; i++)
                 {
                     TestShooting();
-                    if (_state != (int)STATE.TestingShooting) break;
+                    if (_state != STATE.TestingShooting) break;
                 }
                 break;
         }
@@ -117,7 +117,7 @@ public class EnnemiScript : MonoBehaviour
             if (_target.GetComponent<CapsuleCollider2D>().OverlapPoint(_se_position))
             {
                 Shoot(_shoot_vector);
-                _state = (int)STATE.Idle;
+                _state = STATE.Idle;
                 break;
             }
         }
@@ -127,7 +127,7 @@ public class EnnemiScript : MonoBehaviour
         _angle = (float)Math.PI / 2;
         _shoot_timer = 0;
         _shoot_force = 5;
-        _state = (int)STATE.TestingShooting;
+        _state = STATE.TestingShooting;
         
     }
     private void DrawDebugShooting()

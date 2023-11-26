@@ -13,13 +13,20 @@ public class player : MonoBehaviour
     private GameObject gamemanager;
     private bool _myturn = false;
 
+    private enum STATE
+    {
+        Normal,
+        Charging
+    }
+
+    private STATE _state = STATE.Normal;
+
     private Rigidbody2D RB;
     private bool OnGround;
     private Vector2 _mousepos;
 
     private float _currentforce = 0;
     private float _maxforce = 20;
-    private bool _chargingshot = false;
     private float _charingspeed = 10; //per sec
 
     [SerializeField] private GameObject balls;
@@ -41,27 +48,42 @@ public class player : MonoBehaviour
         else RB.velocity -= new Vector2(0.5f * RB.velocity.normalized.x, 0);
 
         turncheck();
-        if (!_myturn) { return; }
-
-        if (Left.action.inProgress && !_chargingshot)
+        if (!_myturn) 
         {
-            gamemanager.GetComponent<GameScript>().ActionTimer();
-            RB.velocity = new Vector2(-5f, RB.velocity.y); 
-        }
-
-        if (Right.action.inProgress && !_chargingshot)
-        {
-            gamemanager.GetComponent<GameScript>().ActionTimer();
-            RB.velocity = new Vector2(5f, RB.velocity.y);
-        }
-
-        if (_chargingshot)
-        {
-            _currentforce += _charingspeed * Time.fixedDeltaTime;
-            if (_currentforce >= _maxforce)
+            switch (_state)
             {
-                ShootFunction();
+                case STATE.Charging:
+                    ShootFunction();
+                    break;
             }
+            _state = STATE.Normal;
+            return; 
+        }
+
+        switch (_state)
+        {
+            case STATE.Normal:
+                if (Left.action.inProgress)
+                {
+                    gamemanager.GetComponent<GameScript>().ActionTimer();
+                    RB.velocity = new Vector2(-5f, RB.velocity.y);
+                }
+
+                if (Right.action.inProgress)
+                {
+                    gamemanager.GetComponent<GameScript>().ActionTimer();
+                    RB.velocity = new Vector2(5f, RB.velocity.y);
+                }
+                break;
+
+            case STATE.Charging:
+                _currentforce += _charingspeed * Time.fixedDeltaTime;
+                if (_currentforce >= _maxforce)
+                {
+                    _state = STATE.Normal;
+                    ShootFunction();
+                }
+                break;
         }
     }
 
@@ -72,28 +94,31 @@ public class player : MonoBehaviour
 
     public void JumpInput(InputAction.CallbackContext ctx)
     {
-        if (ctx.phase == InputActionPhase.Started && OnGround && !_chargingshot && _myturn)
+        if (_state == STATE.Normal)
         {
-            gamemanager.GetComponent<GameScript>().ActionTimer();
-            RB.velocity += Vector2.up * 14;
+            if (ctx.phase == InputActionPhase.Started && OnGround && _myturn)
+            {
+                gamemanager.GetComponent<GameScript>().ActionTimer();
+                RB.velocity += Vector2.up * 14;
+            }
         }
-        
     }
     public void ShootInput(InputAction.CallbackContext ctx)
     {
         if (ctx.phase == InputActionPhase.Started && _myturn)
         {
-            _chargingshot = true;
+            _currentforce = 0;
+            _state = STATE.Charging;
         }
         if (ctx.phase == InputActionPhase.Canceled && _myturn)
         {
+            _state = STATE.Normal;
             ShootFunction();
         }
     }
 
     private void ShootFunction()
     {
-        _chargingshot = false;
         Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
         Vector2 shootvector = _mousepos - Ppos;
         GameObject newball;
