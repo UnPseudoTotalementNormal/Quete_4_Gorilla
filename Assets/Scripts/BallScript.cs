@@ -50,6 +50,12 @@ public class BallScript : MonoBehaviour
             maprb.velocity = dist.normalized * 10;
             maprb.angularVelocity = Random.Range(-200, 200);
         }
+        else
+        {
+            GameObject newobject = new GameObject();
+            newobject.AddComponent<AudioPlayer>();
+            newobject.GetComponent<AudioPlayer>().PlayAudio("Audio/pop");
+        }
         Destroy(this.gameObject);
     }
 }

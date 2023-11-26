@@ -19,7 +19,7 @@ public class Map2script : MonoBehaviour
 
     void PreGeneration()
     {
-        int x = startX - 25;
+        int x = startX - 16;
         height = maxHeight + 30;
         while (x < startX) 
         {
@@ -32,7 +32,7 @@ public class Map2script : MonoBehaviour
     {
         int x = width;
         height = maxHeight + 30;
-        while (x < width + 25)
+        while (x < width + 16)
         {
             GenerateFlatPlatform(x);
             x++;
