@@ -16,6 +16,8 @@ public class EnnemiScript : MonoBehaviour
         Moving,
     }
 
+    private bool OnGround;
+
     [SerializeField] private GameObject balls;
 
     private Rigidbody2D RB;
@@ -35,11 +37,11 @@ public class EnnemiScript : MonoBehaviour
 
     private int _se_iteration = 400;
 
-    private int _min_height = -13;
+    private int _min_height = -30;
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
-        _target = GameObject.Find("Player1");
+        _target = GameObject.Find("Monke1");
     }
     void Start()
     {
@@ -147,5 +149,9 @@ public class EnnemiScript : MonoBehaviour
     private void turncheck()
     {
         _myturn = (gamemanager.GetComponent<GameScript>().Memberturn == this.gameObject);
+    }
+    public void FeetTouched(Collider2D collision, bool touched)
+    {
+        OnGround = touched;
     }
 }

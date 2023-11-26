@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameScript : MonoBehaviour
 {
+    private GameObject HUD;
+
     public GameObject Memberturn;
     private string teamturn;
     private int numturn = 1;
@@ -19,9 +22,24 @@ public class GameScript : MonoBehaviour
 
     private void Start()
     {
+        HUD = GameObject.Find("HUD");
         cam = Camera.main;
         camZ = cam.transform.position.z;
         EndTurn();
+    }
+
+    private void UpdateHUD()
+    {
+        TextMeshProUGUI hudturn = HUD.transform.Find("TextTurn").GetComponent<TextMeshProUGUI>();
+        if (Memberturn != null)
+        {
+            hudturn.text = teamturn + " " + numturn.ToString() + " turn";
+        }
+        else
+        {
+            hudturn.text = " ";
+        }
+        
     }
 
     public void EndTurn(GameObject follow_this = null)
@@ -56,14 +74,14 @@ public class GameScript : MonoBehaviour
         numturn = 1;
         switch (teamturn)
         {
-            case "Player":
-                teamturn = "Ennemi";
+            case "Monke":
+                teamturn = "Bloon";
                 break;
-            case "Ennemi":
-                teamturn = "Player";
+            case "Bloon":
+                teamturn = "Monke";
                 break;
             default:
-                teamturn = "Player";
+                teamturn = "Monke";
                 break;
         }
         GetMember();
@@ -76,6 +94,7 @@ public class GameScript : MonoBehaviour
 
     private void FixedUpdate()
     {
+        UpdateHUD();
         if (following_object !=  null)
         {
             CameraFollow(following_object);

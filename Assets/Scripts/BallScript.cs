@@ -9,7 +9,7 @@ public class BallScript : MonoBehaviour
     private Rigidbody2D RB;
     private Vector2 _awakevel;
 
-    private int min_height = -13;
+    private int min_height = -30;
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
