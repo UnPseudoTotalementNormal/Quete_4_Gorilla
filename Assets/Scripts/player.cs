@@ -7,18 +7,33 @@ using UnityEngine.InputSystem;
 using System;
 using System.Runtime.CompilerServices;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class player : MonoBehaviour
 {
     private GameObject gamemanager;
     private bool _myturn = false;
 
+    private enum STATE
+    {
+        Normal,
+        Charging,
+        Aiming,
+    }
+
+    private STATE _state = STATE.Normal;
+
     private Rigidbody2D RB;
     private bool OnGround;
     private Vector2 _mousepos;
+    private float _mouseangle;
+
+    private float _currentforce = 0;
+    private float _maxforce = 20;
+    private float _charingspeed = 10; //per sec
 
     [SerializeField] private GameObject balls;
-    [SerializeField] private InputActionReference Jump, Left, Right, Shoot, MousePos;
+    [SerializeField] private InputActionReference Jump, Left, Right, Shoot, Aim, MousePos;
 
     void Start()
     {
@@ -36,18 +51,43 @@ public class player : MonoBehaviour
         else RB.velocity -= new Vector2(0.5f * RB.velocity.normalized.x, 0);
 
         turncheck();
-        if (!_myturn) { return; }
-
-        if (Left.action.inProgress)
+        if (!_myturn) 
         {
-            gamemanager.GetComponent<GameScript>().ActionTimer();
-            RB.velocity = new Vector2(-5f, RB.velocity.y); 
+            _state = STATE.Normal;
+            _currentforce = 0;
+            transform.Find("Canvas").Find("ChargingBar").gameObject.SetActive(false);
+            return; 
         }
 
-        if (Right.action.inProgress)
+        switch (_state)
         {
-            gamemanager.GetComponent<GameScript>().ActionTimer();
-            RB.velocity = new Vector2(5f, RB.velocity.y);
+            case STATE.Normal:
+                if (Left.action.inProgress)
+                {
+                    gamemanager.GetComponent<GameScript>().ActionTimer();
+                    RB.velocity = new Vector2(-5f, RB.velocity.y);
+                }
+
+                if (Right.action.inProgress)
+                {
+                    gamemanager.GetComponent<GameScript>().ActionTimer();
+                    RB.velocity = new Vector2(5f, RB.velocity.y);
+                }
+                break;
+
+            case STATE.Charging:
+                _currentforce += _charingspeed * Time.fixedDeltaTime;
+                transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, ((_maxforce - _currentforce) / (_maxforce - 0)) * 100, 0);
+                if (_currentforce >= _maxforce)
+                {
+                    _state = STATE.Normal;
+                    ShootFunction();
+                }
+                break;
+            case STATE.Aiming:
+                transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, 100, 0);
+                transform.Find("Canvas").transform.rotation = Quaternion.Euler(Vector3.forward * _mouseangle);
+                break;
         }
     }
 
@@ -56,34 +96,70 @@ public class player : MonoBehaviour
         OnGround = touched;
     }
 
-    public void JumpFunction(InputAction.CallbackContext ctx)
+    public void JumpInput(InputAction.CallbackContext ctx)
     {
-        if (ctx.phase == InputActionPhase.Started && OnGround && _myturn)
+        if (!_myturn) { return; }
+        if (_state == STATE.Normal)
         {
-            gamemanager.GetComponent<GameScript>().ActionTimer();
-            RB.velocity += Vector2.up * 14;
+            if (ctx.phase == InputActionPhase.Started && OnGround)
+            {
+                gamemanager.GetComponent<GameScript>().ActionTimer();
+                RB.velocity += Vector2.up * 14;
+            }
         }
-        
     }
-    public void ShootFunction(InputAction.CallbackContext ctx)
+    public void ShootInput(InputAction.CallbackContext ctx)
     {
-        if (ctx.phase == InputActionPhase.Started && _myturn)
+        if (!_myturn) { return; }
+
+        if (ctx.phase == InputActionPhase.Started && _state == STATE.Aiming)
         {
-            Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
-            Vector2 shootvector = _mousepos - Ppos;
-            GameObject newball;
-            newball = Instantiate(balls, transform.position, transform.rotation);
-
-            newball.GetComponent<BallScript>().SetAngle(shootvector.normalized, 10);
-
-            gamemanager.GetComponent<GameScript>().EndTurn(newball);
+            _currentforce = 0;
+            _state = STATE.Charging;
         }
+        if (ctx.phase == InputActionPhase.Canceled && _state == STATE.Charging)
+        {
+            _state = STATE.Normal;
+            ShootFunction();
+        }
+    }
+
+    public void AimInput(InputAction.CallbackContext ctx)
+    {
+        if (!_myturn) { return; }
+        switch (ctx.phase)
+        {
+            case InputActionPhase.Started:
+                _state = STATE.Aiming;
+                transform.Find("Canvas").Find("ChargingBar").gameObject.SetActive(true);
+                break;
+            case InputActionPhase.Canceled:
+                _state = STATE.Normal;
+                _currentforce = 0;
+                transform.Find("Canvas").Find("ChargingBar").gameObject.SetActive(false);
+                break;
+        }
+    }
+
+    private void ShootFunction()
+    {
+        Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
+        Vector2 shootvector = _mousepos - Ppos;
+        GameObject newball;
+        newball = Instantiate(balls, transform.position, transform.rotation);
+
+        newball.GetComponent<BallScript>().SetAngle(shootvector.normalized, _currentforce);
+        gamemanager.GetComponent<GameScript>().EndTurn(newball);
     }
 
     public void GetMousePosition(InputAction.CallbackContext ctx)
     {
         _mousepos = ctx.ReadValue<Vector2>();
         _mousepos = Camera.main.ScreenToWorldPoint(_mousepos);
+
+        Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
+        _mouseangle = Mathf.Atan2(_mousepos.y - Ppos.y, _mousepos.x - Ppos.x);
+        _mouseangle *= Mathf.Rad2Deg; 
     }
 
     private void turncheck()

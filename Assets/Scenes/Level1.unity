@@ -729,6 +729,7 @@ MonoBehaviour:
   Left: {fileID: -8731717615006294662, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
   Right: {fileID: -6026944128040993771, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
   Shoot: {fileID: -5051700757941643723, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
+  Aim: {fileID: -1875453882141459782, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
   MousePos: {fileID: -391296142053751541, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
 --- !u!212 &587185328
 SpriteRenderer:
@@ -827,7 +828,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 587185327}
         m_TargetAssemblyTypeName: player, Assembly-CSharp
-        m_MethodName: JumpFunction
+        m_MethodName: JumpInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -851,7 +852,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 587185327}
         m_TargetAssemblyTypeName: player, Assembly-CSharp
-        m_MethodName: ShootFunction
+        m_MethodName: ShootInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -879,6 +880,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: a15c1a6d-b8a0-4c3e-81d4-de3e5fc35706
     m_ActionName: PlayerInput/MousePos[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 766323a0-db26-4690-9f44-1d2e4697e37d
+    m_ActionName: PlayerInput/Aim[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerInput
@@ -1254,6 +1259,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer: 0
+  maxtimer: 15
+  timerafteraction: 8
   Memberturn: {fileID: 0}
 --- !u!4 &913149316
 Transform:
