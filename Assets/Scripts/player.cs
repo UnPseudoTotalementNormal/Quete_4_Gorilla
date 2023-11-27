@@ -34,20 +34,32 @@ public class player : MonoBehaviour
     [SerializeField] private GameObject balls;
     [SerializeField] private InputActionReference Jump, Left, Right, Shoot, Aim, MousePos;
 
+    private float _sprite_angle;
+    private Transform _monkesprite;
+
     void Start()
     {
         gamemanager = GameObject.Find("GameManager");
         RB = GetComponent<Rigidbody2D>();
+        _monkesprite = transform.Find("MonkeSprite");
     }
 
     void Update()
     {
+        Transform monkeform = _monkesprite.GetComponent<Transform>();
+        float currrot = monkeform.transform.localRotation.eulerAngles.z;
+        float nextrot = Mathf.LerpAngle(currrot, _sprite_angle, 6f * Time.deltaTime);
+        monkeform.transform.rotation = Quaternion.Euler(Vector3.forward * nextrot);
+        monkeform.transform.SetLocalPositionAndRotation(new Vector3(0, 0.2f + 0.2f * Mathf.Sin(Time.time * 5), 0), monkeform.transform.rotation);
+        
     }
 
     void FixedUpdate()
     {
         if (RB.velocity.magnitude < 1) RB.velocity -= new Vector2(RB.velocity.x, 0);
         else RB.velocity -= new Vector2(0.5f * RB.velocity.normalized.x, 0);
+
+        _sprite_angle = 0;
 
         turncheck();
         if (!_myturn) 
@@ -65,12 +77,16 @@ public class player : MonoBehaviour
                 {
                     gamemanager.GetComponent<GameScript>().ActionTimer();
                     RB.velocity = new Vector2(-5f, RB.velocity.y);
+                    _monkesprite.GetComponent<SpriteRenderer>().flipX = true;
+                    _sprite_angle = 30;
                 }
 
                 if (Right.action.inProgress)
                 {
                     gamemanager.GetComponent<GameScript>().ActionTimer();
                     RB.velocity = new Vector2(5f, RB.velocity.y);
+                    _monkesprite.GetComponent<SpriteRenderer>().flipX = false;
+                    _sprite_angle = -30;
                 }
                 break;
 
