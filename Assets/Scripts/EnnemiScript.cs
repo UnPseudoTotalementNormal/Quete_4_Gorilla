@@ -67,6 +67,16 @@ public class EnnemiScript : MonoBehaviour
                 break;
         }
     }
+
+    private void WalkLeft()
+    {
+        RB.velocity = new Vector2(-5f, RB.velocity.y);
+    }
+
+    private void WalkRight()
+    {
+        RB.velocity = new Vector2(5f, RB.velocity.y);
+    }
     private void WaitShooting()
     {
         DrawDebugShooting();

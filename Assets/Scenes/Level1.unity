@@ -799,8 +799,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 290b0ef3d3fa04e47b0a645459c73b22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxforce: 20
-  _charingspeed: 10
+  _maxforce: 15
+  _chargingspeed: 10
   balls: {fileID: 5814152976089428540, guid: 8e9857bcdafa8c346a99e6c36493ba16, type: 3}
   Jump: {fileID: 7702189921173272580, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
   Left: {fileID: -8731717615006294662, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
@@ -1927,7 +1927,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a4337a9e97c4ac84aad2a8ce828c4fb2, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 0.506
   m_Pitch: 1
   Loop: 1

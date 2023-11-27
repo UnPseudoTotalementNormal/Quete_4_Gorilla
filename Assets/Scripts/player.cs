@@ -13,7 +13,6 @@ public class player : MonoBehaviour
 {
     private GameObject gamemanager;
     private bool _myturn = false;
-
     private enum STATE
     {
         Normal,
