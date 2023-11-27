@@ -28,7 +28,7 @@ public class EnnemiScript : MonoBehaviour
     private STATE _state = STATE.Idle;
 
     private float _shoot_timer = 0;
-    private int _shoot_max_timer = 1; //in seconds
+    private float _shoot_max_timer = 1f; //in seconds
 
     private float _angle = 0;
     private float _shoot_force;
@@ -40,8 +40,6 @@ public class EnnemiScript : MonoBehaviour
     private GameObject _target;
 
     private int _se_iteration = 400;
-
-    private int _min_height = -30;
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
@@ -54,7 +52,11 @@ public class EnnemiScript : MonoBehaviour
     private void FixedUpdate()
     {
         turncheck();
-        if (!_myturn) { return; }
+        if (!_myturn) 
+        {
+            _state = STATE.Idle;
+            return; 
+        }
 
         switch (_state)
         {
@@ -65,12 +67,12 @@ public class EnnemiScript : MonoBehaviour
             case STATE.TestingShooting:
                 for (int i = 0; i < 200; i++)
                 {
-                    StartCoroutine(TestShooting());
+                    TestShooting();
                     if (_state != STATE.TestingShooting) break;
                 }
                 break;
             case STATE.Moving:
-                if (_target.transform.position.x - transform.transform.position.x < 0)
+                if (_target.transform.position.x - transform.transform.position.x > 0)
                 {
                     if (OnWall) JumpFunction();
                     WalkRight();
@@ -110,7 +112,7 @@ public class EnnemiScript : MonoBehaviour
             StartTestShooting();
         }
     }
-    IEnumerator TestShooting()
+    private void TestShooting()
     {
         DrawDebugShooting();
         _angle += 0.0015f;
@@ -122,6 +124,7 @@ public class EnnemiScript : MonoBehaviour
         if (_shoot_force >= _maxforce) 
         { 
             _state = STATE.Moving;
+            return;
         }
         _se_position = RB.position;
         _se_oldpos.Clear();
@@ -131,11 +134,6 @@ public class EnnemiScript : MonoBehaviour
         
         for (int i = 0; i < _se_iteration; i++)
         {
-            if (_se_position.y < _min_height)
-            {
-                break;
-            }
-
             _se_oldpos.Add(_se_position);
 
             _se_position += _se_velocity * Time.fixedDeltaTime;
@@ -145,7 +143,7 @@ public class EnnemiScript : MonoBehaviour
 
             if (_raycast.collider != null)
             {
-                if (_raycast.collider.GetComponent<BoxCollider2D>() != null) 
+                if (_raycast.collider.GetComponent<BoxCollider2D>() != null && _raycast.transform.tag == "Map") 
                 {
                     break;
                 }
@@ -158,8 +156,6 @@ public class EnnemiScript : MonoBehaviour
                 break;
             }
         }
-
-        yield return null;
     }
     private void StartTestShooting()
     {
