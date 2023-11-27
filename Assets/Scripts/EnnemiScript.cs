@@ -17,6 +17,7 @@ public class EnnemiScript : MonoBehaviour
     }
 
     private bool OnGround;
+    private bool OnWall;
 
     [SerializeField] private GameObject balls;
 
@@ -68,6 +69,18 @@ public class EnnemiScript : MonoBehaviour
                     if (_state != STATE.TestingShooting) break;
                 }
                 break;
+            case STATE.Moving:
+                if (_target.transform.position.x - transform.transform.position.x < 0)
+                {
+                    if (OnWall) JumpFunction();
+                    WalkRight();
+                }
+                else
+                {
+                    if (OnWall) JumpFunction();
+                    WalkLeft();
+                }
+                break;
         }
     }
 
@@ -79,6 +92,14 @@ public class EnnemiScript : MonoBehaviour
     private void WalkRight()
     {
         RB.velocity = new Vector2(5f, RB.velocity.y);
+    }
+
+    private void JumpFunction()
+    {
+        if (OnGround)
+        {
+            RB.velocity += Vector2.up * 14;
+        }
     }
     private void WaitShooting()
     {
@@ -100,7 +121,7 @@ public class EnnemiScript : MonoBehaviour
         }
         if (_shoot_force >= _maxforce) 
         { 
-            _state = STATE.Idle;
+            _state = STATE.Moving;
         }
         _se_position = RB.position;
         _se_oldpos.Clear();
@@ -171,5 +192,17 @@ public class EnnemiScript : MonoBehaviour
     public void FeetTouched(Collider2D collision, bool touched)
     {
         OnGround = touched;
+    }
+
+    public void SideTouched(Collider2D collision, bool touched)
+    {
+        if (collision.tag == "Map" && touched)
+        {
+            OnWall = touched;
+        }
+        else
+        {
+            OnWall = touched;
+        }
     }
 }
