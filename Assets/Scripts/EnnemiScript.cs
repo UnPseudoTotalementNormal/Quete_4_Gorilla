@@ -61,7 +61,7 @@ public class EnnemiScript : MonoBehaviour
             case STATE.TestingShooting:
                 for (int i = 0; i < 200; i++)
                 {
-                    TestShooting();
+                    StartCoroutine(TestShooting());
                     if (_state != STATE.TestingShooting) break;
                 }
                 break;
@@ -86,7 +86,7 @@ public class EnnemiScript : MonoBehaviour
             StartTestShooting();
         }
     }
-    private void TestShooting()
+    IEnumerator TestShooting()
     {
         DrawDebugShooting();
         _angle += 0.0015f;
@@ -131,6 +131,8 @@ public class EnnemiScript : MonoBehaviour
                 break;
             }
         }
+
+        yield return null;
     }
     private void StartTestShooting()
     {
