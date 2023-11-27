@@ -13,7 +13,6 @@ public class player : MonoBehaviour
 {
     private GameObject gamemanager;
     private bool _myturn = false;
-
     private enum STATE
     {
         Normal,
@@ -29,7 +28,7 @@ public class player : MonoBehaviour
     private float _mouseangle;
 
     private float _currentforce = 0;
-    [SerializeField] private float _maxforce = 10;
+    [SerializeField] private float _maxforce = 15;
     [SerializeField] private float _chargingspeed = 10; //per sec
 
     [SerializeField] private GameObject balls;

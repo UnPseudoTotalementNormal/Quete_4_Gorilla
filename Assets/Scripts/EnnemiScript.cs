@@ -17,8 +17,12 @@ public class EnnemiScript : MonoBehaviour
     }
 
     private bool OnGround;
+    private bool OnWall;
 
     [SerializeField] private GameObject balls;
+
+    [SerializeField] private float _maxforce = 15;
+    [SerializeField] private float _chargingspeed = 10; //per sec
 
     private Rigidbody2D RB;
     private STATE _state = STATE.Idle;
@@ -61,10 +65,40 @@ public class EnnemiScript : MonoBehaviour
             case STATE.TestingShooting:
                 for (int i = 0; i < 200; i++)
                 {
-                    TestShooting();
+                    StartCoroutine(TestShooting());
                     if (_state != STATE.TestingShooting) break;
                 }
                 break;
+            case STATE.Moving:
+                if (_target.transform.position.x - transform.transform.position.x < 0)
+                {
+                    if (OnWall) JumpFunction();
+                    WalkRight();
+                }
+                else
+                {
+                    if (OnWall) JumpFunction();
+                    WalkLeft();
+                }
+                break;
+        }
+    }
+
+    private void WalkLeft()
+    {
+        RB.velocity = new Vector2(-5f, RB.velocity.y);
+    }
+
+    private void WalkRight()
+    {
+        RB.velocity = new Vector2(5f, RB.velocity.y);
+    }
+
+    private void JumpFunction()
+    {
+        if (OnGround)
+        {
+            RB.velocity += Vector2.up * 14;
         }
     }
     private void WaitShooting()
@@ -76,7 +110,7 @@ public class EnnemiScript : MonoBehaviour
             StartTestShooting();
         }
     }
-    private void TestShooting()
+    IEnumerator TestShooting()
     {
         DrawDebugShooting();
         _angle += 0.0015f;
@@ -85,7 +119,10 @@ public class EnnemiScript : MonoBehaviour
             _angle = (float)Math.PI/2.2f;
             _shoot_force += 1;
         }
-
+        if (_shoot_force >= _maxforce) 
+        { 
+            _state = STATE.Moving;
+        }
         _se_position = RB.position;
         _se_oldpos.Clear();
         Vector2 _shoot_vector = new Vector2((float)Math.Cos(_angle), (float)Math.Sin(_angle));
@@ -121,6 +158,8 @@ public class EnnemiScript : MonoBehaviour
                 break;
             }
         }
+
+        yield return null;
     }
     private void StartTestShooting()
     {
@@ -153,5 +192,17 @@ public class EnnemiScript : MonoBehaviour
     public void FeetTouched(Collider2D collision, bool touched)
     {
         OnGround = touched;
+    }
+
+    public void SideTouched(Collider2D collision, bool touched)
+    {
+        if (collision.tag == "Map" && touched)
+        {
+            OnWall = touched;
+        }
+        else
+        {
+            OnWall = touched;
+        }
     }
 }
