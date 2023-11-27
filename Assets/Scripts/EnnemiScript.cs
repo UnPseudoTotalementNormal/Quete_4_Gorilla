@@ -20,6 +20,9 @@ public class EnnemiScript : MonoBehaviour
 
     [SerializeField] private GameObject balls;
 
+    [SerializeField] private float _maxforce = 15;
+    [SerializeField] private float _chargingspeed = 10; //per sec
+
     private Rigidbody2D RB;
     private STATE _state = STATE.Idle;
 
@@ -95,7 +98,10 @@ public class EnnemiScript : MonoBehaviour
             _angle = (float)Math.PI/2.2f;
             _shoot_force += 1;
         }
-
+        if (_shoot_force >= _maxforce) 
+        { 
+            _state = STATE.Idle;
+        }
         _se_position = RB.position;
         _se_oldpos.Clear();
         Vector2 _shoot_vector = new Vector2((float)Math.Cos(_angle), (float)Math.Sin(_angle));
