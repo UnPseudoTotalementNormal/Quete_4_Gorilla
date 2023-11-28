@@ -136,6 +136,10 @@ public class EnnemiScript : MonoBehaviour
             _old_jumpx = transform.position.x;
             _jumped = true;
             RB.velocity = Vector2.up * 14;
+            if (_walking_timer > 1) 
+            {
+                _walking_timer = 0;
+            }
         }
     }
     private void WaitShooting()
