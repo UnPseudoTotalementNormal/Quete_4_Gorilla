@@ -39,7 +39,6 @@ public class GameScript : MonoBehaviour
     private void RandomizeWind()
     {
         float r = UnityEngine.Random.Range(-7, 7);
-        print(r);
         wind = new Vector2(1, 0) * r;
     }
     private void UpdateHUD()

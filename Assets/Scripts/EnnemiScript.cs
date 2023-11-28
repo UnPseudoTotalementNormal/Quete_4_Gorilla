@@ -36,6 +36,8 @@ public class EnnemiScript : MonoBehaviour
     [SerializeField] private float _maxforce = 15;
     [SerializeField] private float _chargingspeed = 10; //per sec
 
+    private float _rand_angle = 30;
+
     private Rigidbody2D RB;
     private STATE _state = STATE.Idle;
 
@@ -206,6 +208,11 @@ public class EnnemiScript : MonoBehaviour
 
             if (_target.GetComponent<CapsuleCollider2D>().OverlapPoint(_se_position))
             {
+                float angletest = UnityEngine.Random.Range(-_rand_angle, _rand_angle);
+                Debug.Log(angletest);
+                float angle_randomized = _angle + (angletest * Mathf.Deg2Rad);
+                _shoot_vector = new Vector2((float)Math.Cos(angle_randomized), (float)Math.Sin(angle_randomized));
+                _shoot_vector *= _shoot_force;
                 Shoot(_shoot_vector);
                 _state = STATE.Idle;
                 break;
