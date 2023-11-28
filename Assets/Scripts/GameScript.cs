@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameScript : MonoBehaviour
 {
@@ -112,7 +113,10 @@ public class GameScript : MonoBehaviour
                 teamturn = "Monke";
                 break;
         }
-        GetMember();
+        if (GetMember() == null)
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 
     private GameObject GetMember()
