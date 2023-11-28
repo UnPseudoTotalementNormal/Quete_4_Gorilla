@@ -58,6 +58,9 @@ public class EnnemiScript : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (RB.velocity.magnitude < 1) RB.velocity -= new Vector2(RB.velocity.x, 0);
+        else RB.velocity -= new Vector2(0.5f * RB.velocity.normalized.x, 0);
+
         turncheck();
         if (!_myturn) 
         {
