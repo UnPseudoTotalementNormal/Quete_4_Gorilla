@@ -78,6 +78,7 @@ public class player : MonoBehaviour
                     gamemanager.GetComponent<GameScript>().ActionTimer();
                     RB.velocity = new Vector2(-5f, RB.velocity.y);
                     _monkesprite.GetComponent<SpriteRenderer>().flipX = true;
+                    _monkesprite.Find("FirePart").GetComponent<Transform>().position = _monkesprite.Find("FirePartRightPos").GetComponent<Transform>().position;
                     _sprite_angle = 30;
                 }
 
@@ -86,6 +87,7 @@ public class player : MonoBehaviour
                     gamemanager.GetComponent<GameScript>().ActionTimer();
                     RB.velocity = new Vector2(5f, RB.velocity.y);
                     _monkesprite.GetComponent<SpriteRenderer>().flipX = false;
+                    _monkesprite.Find("FirePart").GetComponent<Transform>().position = _monkesprite.Find("FirePartLeftPos").GetComponent<Transform>().position;
                     _sprite_angle = -30;
                 }
                 break;
