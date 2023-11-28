@@ -20,6 +20,11 @@ public class EnnemiScript : MonoBehaviour
     private bool OnWallRight;
     private bool OnWallLeft;
 
+    private bool HoleRight;
+    private bool HoleLeft;
+    private int HoleRightBuffer = 0;
+    private int HoleLeftBuffer = 0;
+
     private bool _walk_oposite_dir = false;
     private bool _jumped = false;
     private float _old_jumpx;
@@ -60,6 +65,12 @@ public class EnnemiScript : MonoBehaviour
     {
         if (RB.velocity.magnitude < 1) RB.velocity -= new Vector2(RB.velocity.x, 0);
         else RB.velocity -= new Vector2(0.5f * RB.velocity.normalized.x, 0);
+
+        if (!OnGround)
+        {
+            HoleLeftBuffer = 0;
+            HoleRightBuffer = 0;
+        }
 
         turncheck();
         if (!_myturn) 
@@ -108,13 +119,13 @@ public class EnnemiScript : MonoBehaviour
 
     private void WalkLeft()
     {
-        if (OnWallLeft && RB.velocity.y <= 0) JumpFunction();
+        if ((OnWallLeft || HoleLeft) && RB.velocity.y <= 0) JumpFunction();
         RB.velocity = new Vector2(-5f, RB.velocity.y);
     }
 
     private void WalkRight()
     {
-        if (OnWallRight && RB.velocity.y <= 0) JumpFunction();
+        if ((OnWallRight || HoleRight) && RB.velocity.y <= 0) JumpFunction();
         RB.velocity = new Vector2(5f, RB.velocity.y);
     }
 
@@ -246,6 +257,43 @@ public class EnnemiScript : MonoBehaviour
         else
         {
             OnWallRight = touched;
+        }
+    }
+
+    public void LeftSideHole(bool hole)
+    {
+        if (hole)
+        {
+            HoleLeftBuffer++;
+            if (HoleLeftBuffer > 1)
+            {
+                HoleLeft = true;
+                HoleLeftBuffer = 0;
+            }
+        }
+        else
+        {
+            HoleLeft = false;
+            HoleLeftBuffer = 0;
+        }
+         
+    }
+
+    public void RightSideHole(bool hole)
+    {
+        if (hole)
+        {
+            HoleRightBuffer++;
+            if (HoleRightBuffer > 1)
+            {
+                HoleRight = true;
+                HoleRightBuffer = 0;
+            }
+        }
+        else
+        {
+            HoleRight = false;
+            HoleRightBuffer = 0;
         }
     }
 }
