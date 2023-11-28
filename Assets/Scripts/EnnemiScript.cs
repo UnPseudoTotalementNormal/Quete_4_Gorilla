@@ -138,7 +138,7 @@ public class EnnemiScript : MonoBehaviour
             RB.velocity = Vector2.up * 14;
             if (_walking_timer > 1) 
             {
-                _walking_timer = 0;
+                _walking_timer = 1;
             }
         }
     }
@@ -269,7 +269,7 @@ public class EnnemiScript : MonoBehaviour
         if (hole)
         {
             HoleLeftBuffer++;
-            if (HoleLeftBuffer > 1)
+            if (HoleLeftBuffer > 3)
             {
                 HoleLeft = true;
                 HoleLeftBuffer = 0;
@@ -288,7 +288,7 @@ public class EnnemiScript : MonoBehaviour
         if (hole)
         {
             HoleRightBuffer++;
-            if (HoleRightBuffer > 1)
+            if (HoleRightBuffer > 3)
             {
                 HoleRight = true;
                 HoleRightBuffer = 0;

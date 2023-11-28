@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 204232372}
   - component: {fileID: 204232374}
   - component: {fileID: 204232373}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: FeetCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2916,7 +2916,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 100
+      scalar: 125
       minScalar: 10
       maxCurve:
         serializedVersion: 2
