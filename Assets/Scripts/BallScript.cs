@@ -32,8 +32,13 @@ public class BallScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         ExplosionRadius.GetComponent<Rigidbody2D>().excludeLayers = RB.excludeLayers;
-        GameObject newexplosion = Instantiate(ExplosionRadius);
-        newexplosion.transform.position = transform.position;
+        if (ExplosionRadius != null)
+        {
+            GameObject newexplosion = null;
+            newexplosion = Instantiate(ExplosionRadius);
+            newexplosion.transform.position = transform.position;
+            ExplosionRadius = null;
+        }
         Destroy(this.gameObject);
     }
 }

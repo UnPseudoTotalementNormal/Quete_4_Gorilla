@@ -8,6 +8,7 @@ public class ExplosionRadiusScript : MonoBehaviour
     private List<Collider2D> oldcolliders = new List<Collider2D>();
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Destroy(this.gameObject);
         foreach (Collider2D icollider in oldcolliders) 
         {
             if (icollider == collision)
@@ -27,15 +28,15 @@ public class ExplosionRadiusScript : MonoBehaviour
             }
             Rigidbody2D maprb = collision.GetComponent<Rigidbody2D>();
             Vector2 dist = collision.GetComponent<Transform>().position - GetComponent<Transform>().position;
-            maprb.velocity = -dist.normalized * 10;
+            maprb.velocity = -dist.normalized * 15;
             maprb.angularVelocity = Random.Range(-200, 200);
         }
         else
         {
+            Debug.Log(collision);
             GameObject newobject = new GameObject();
             newobject.AddComponent<AudioPlayer>();
             newobject.GetComponent<AudioPlayer>().PlayAudio("Audio/pop");
         }
-        Destroy(this.gameObject);
     }
 }
