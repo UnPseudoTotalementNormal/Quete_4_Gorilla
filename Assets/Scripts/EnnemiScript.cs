@@ -23,6 +23,8 @@ public class EnnemiScript : MonoBehaviour
     private bool _walk_oposite_dir = false;
     private bool _jumped = false;
     private float _old_jumpx;
+    private float _walking_timer = 0f;
+    private float _walking_max_timer = 2f;
 
     [SerializeField] private GameObject balls;
 
@@ -77,6 +79,7 @@ public class EnnemiScript : MonoBehaviour
                 }
                 break;
             case STATE.Moving:
+                WaitWalkingStop();
                 if (_jumped && OnGround && RB.velocity.y <= 0)
                 {
                     if (Mathf.Abs(_old_jumpx - transform.position.x) < 0.3f)
@@ -126,6 +129,15 @@ public class EnnemiScript : MonoBehaviour
         DrawDebugShooting();
         _shoot_timer += Time.deltaTime;
         if (_shoot_timer > _shoot_max_timer ) 
+        {
+            StartTestShooting();
+        }
+    }
+
+    private void WaitWalkingStop()
+    {
+        _walking_timer += Time.deltaTime;
+        if (_walking_timer > _walking_max_timer )
         {
             StartTestShooting();
         }
@@ -181,6 +193,7 @@ public class EnnemiScript : MonoBehaviour
         _angle = (float)Math.PI / 2;
         _shoot_timer = 0;
         _shoot_force = 5;
+        _walking_timer = 0;
         _state = STATE.TestingShooting;
         
     }
