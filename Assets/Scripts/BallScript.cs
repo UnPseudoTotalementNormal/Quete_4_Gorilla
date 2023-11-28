@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class BallScript : MonoBehaviour
 {
+    [SerializeField] private GameObject ExplosionRadius;
+
     private Rigidbody2D RB;
     private Vector2 _awakevel;
 
@@ -13,13 +15,6 @@ public class BallScript : MonoBehaviour
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
-    }
-    void Start()
-    {
-    }
-    void Update()
-    {
-        
     }
     private void FixedUpdate()
     {
@@ -36,26 +31,9 @@ public class BallScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Map")
-        {
-            if (collision.GetComponent<Rigidbody2D>() == null) 
-            {
-                collision.AddComponent<Rigidbody2D>();
-                PhysicsMaterial2D mapmaterial = new PhysicsMaterial2D();
-                mapmaterial.bounciness = .5f;
-                collision.GetComponent<Rigidbody2D>().sharedMaterial = mapmaterial;
-            }
-            Rigidbody2D maprb = collision.GetComponent<Rigidbody2D>();
-            Vector2 dist = collision.GetComponent<Transform>().position - GetComponent<Transform>().position;
-            maprb.velocity = dist.normalized * 10;
-            maprb.angularVelocity = Random.Range(-200, 200);
-        }
-        else
-        {
-            GameObject newobject = new GameObject();
-            newobject.AddComponent<AudioPlayer>();
-            newobject.GetComponent<AudioPlayer>().PlayAudio("Audio/pop");
-        }
+        ExplosionRadius.GetComponent<Rigidbody2D>().excludeLayers = RB.excludeLayers;
+        GameObject newexplosion = Instantiate(ExplosionRadius);
+        newexplosion.transform.position = transform.position;
         Destroy(this.gameObject);
     }
 }
