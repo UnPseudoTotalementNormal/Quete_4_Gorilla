@@ -92,7 +92,7 @@ public class player : MonoBehaviour
 
             case STATE.Charging:
                 _currentforce += _chargingspeed * Time.fixedDeltaTime;
-                transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, ((_maxforce - _currentforce) / (_maxforce - 0)) * 100, 0);
+                transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, ((_maxforce - _currentforce) / (_maxforce - 0)) * 64, 0);
                 if (_currentforce >= _maxforce)
                 {
                     _state = STATE.Normal;
@@ -100,7 +100,7 @@ public class player : MonoBehaviour
                 }
                 break;
             case STATE.Aiming:
-                transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, 100, 0);
+                transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, 64, 0);
                 transform.Find("Canvas").transform.rotation = Quaternion.Euler(Vector3.forward * _mouseangle);
                 break;
         }

@@ -17,7 +17,19 @@ public class EnnemiScript : MonoBehaviour
     }
 
     private bool OnGround;
-    private bool OnWall;
+    private bool OnWallRight;
+    private bool OnWallLeft;
+
+    private bool HoleRight;
+    private bool HoleLeft;
+    private int HoleRightBuffer = 0;
+    private int HoleLeftBuffer = 0;
+
+    private bool _walk_oposite_dir = false;
+    private bool _jumped = false;
+    private float _old_jumpx;
+    private float _walking_timer = 0f;
+    private float _walking_max_timer = 2f;
 
     [SerializeField] private GameObject balls;
 
@@ -28,7 +40,7 @@ public class EnnemiScript : MonoBehaviour
     private STATE _state = STATE.Idle;
 
     private float _shoot_timer = 0;
-    private int _shoot_max_timer = 1; //in seconds
+    private float _shoot_max_timer = 1f; //in seconds
 
     private float _angle = 0;
     private float _shoot_force;
@@ -40,8 +52,6 @@ public class EnnemiScript : MonoBehaviour
     private GameObject _target;
 
     private int _se_iteration = 400;
-
-    private int _min_height = -30;
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
@@ -53,8 +63,21 @@ public class EnnemiScript : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (RB.velocity.magnitude < 1) RB.velocity -= new Vector2(RB.velocity.x, 0);
+        else RB.velocity -= new Vector2(0.5f * RB.velocity.normalized.x, 0);
+
+        if (!OnGround)
+        {
+            HoleLeftBuffer = 0;
+            HoleRightBuffer = 0;
+        }
+
         turncheck();
-        if (!_myturn) { return; }
+        if (!_myturn) 
+        {
+            _state = STATE.Idle;
+            return; 
+        }
 
         switch (_state)
         {
@@ -70,15 +93,25 @@ public class EnnemiScript : MonoBehaviour
                 }
                 break;
             case STATE.Moving:
-                if (_target.transform.position.x - transform.transform.position.x < 0)
+                WaitWalkingStop();
+                if (_jumped && OnGround && RB.velocity.y <= 0)
                 {
-                    if (OnWall) JumpFunction();
-                    WalkRight();
+                    if (Mathf.Abs(_old_jumpx - transform.position.x) < 0.3f)
+                    {
+                        _old_jumpx = 0;
+                        _jumped = false;
+                        _walk_oposite_dir = !_walk_oposite_dir;
+                    }
+                }
+                if (_target.transform.position.x - transform.transform.position.x > 0)
+                {
+                    if (_walk_oposite_dir) WalkLeft();
+                    else WalkRight();
                 }
                 else
                 {
-                    if (OnWall) JumpFunction();
-                    WalkLeft();
+                    if (_walk_oposite_dir) WalkRight();
+                    else WalkLeft();
                 }
                 break;
         }
@@ -86,11 +119,13 @@ public class EnnemiScript : MonoBehaviour
 
     private void WalkLeft()
     {
+        if ((OnWallLeft || HoleLeft) && RB.velocity.y <= 0) JumpFunction();
         RB.velocity = new Vector2(-5f, RB.velocity.y);
     }
 
     private void WalkRight()
     {
+        if ((OnWallRight || HoleRight) && RB.velocity.y <= 0) JumpFunction();
         RB.velocity = new Vector2(5f, RB.velocity.y);
     }
 
@@ -98,7 +133,9 @@ public class EnnemiScript : MonoBehaviour
     {
         if (OnGround)
         {
-            RB.velocity += Vector2.up * 14;
+            _old_jumpx = transform.position.x;
+            _jumped = true;
+            RB.velocity = Vector2.up * 14;
         }
     }
     private void WaitShooting()
@@ -106,6 +143,15 @@ public class EnnemiScript : MonoBehaviour
         DrawDebugShooting();
         _shoot_timer += Time.deltaTime;
         if (_shoot_timer > _shoot_max_timer ) 
+        {
+            StartTestShooting();
+        }
+    }
+
+    private void WaitWalkingStop()
+    {
+        _walking_timer += Time.deltaTime;
+        if (_walking_timer > _walking_max_timer )
         {
             StartTestShooting();
         }
@@ -122,6 +168,7 @@ public class EnnemiScript : MonoBehaviour
         if (_shoot_force >= _maxforce) 
         { 
             _state = STATE.Moving;
+            yield return null;
         }
         _se_position = RB.position;
         _se_oldpos.Clear();
@@ -131,11 +178,6 @@ public class EnnemiScript : MonoBehaviour
         
         for (int i = 0; i < _se_iteration; i++)
         {
-            if (_se_position.y < _min_height)
-            {
-                break;
-            }
-
             _se_oldpos.Add(_se_position);
 
             _se_position += _se_velocity * Time.fixedDeltaTime;
@@ -145,7 +187,7 @@ public class EnnemiScript : MonoBehaviour
 
             if (_raycast.collider != null)
             {
-                if (_raycast.collider.GetComponent<BoxCollider2D>() != null) 
+                if (_raycast.collider.GetComponent<BoxCollider2D>() != null && _raycast.transform.tag == "Map") 
                 {
                     break;
                 }
@@ -158,7 +200,6 @@ public class EnnemiScript : MonoBehaviour
                 break;
             }
         }
-
         yield return null;
     }
     private void StartTestShooting()
@@ -166,6 +207,7 @@ public class EnnemiScript : MonoBehaviour
         _angle = (float)Math.PI / 2;
         _shoot_timer = 0;
         _shoot_force = 5;
+        _walking_timer = 0;
         _state = STATE.TestingShooting;
         
     }
@@ -194,15 +236,64 @@ public class EnnemiScript : MonoBehaviour
         OnGround = touched;
     }
 
-    public void SideTouched(Collider2D collision, bool touched)
+    public void LeftSideTouched(Collider2D collision, bool touched)
     {
         if (collision.tag == "Map" && touched)
         {
-            OnWall = touched;
+            OnWallLeft = touched;
         }
         else
         {
-            OnWall = touched;
+            OnWallLeft = touched;
+        }
+    }
+
+    public void RightSideTouched(Collider2D collision, bool touched)
+    {
+        if (collision.tag == "Map" && touched)
+        {
+            OnWallRight = touched;
+        }
+        else
+        {
+            OnWallRight = touched;
+        }
+    }
+
+    public void LeftSideHole(bool hole)
+    {
+        if (hole)
+        {
+            HoleLeftBuffer++;
+            if (HoleLeftBuffer > 1)
+            {
+                HoleLeft = true;
+                HoleLeftBuffer = 0;
+            }
+        }
+        else
+        {
+            HoleLeft = false;
+            HoleLeftBuffer = 0;
+        }
+         
+    }
+
+    public void RightSideHole(bool hole)
+    {
+        if (hole)
+        {
+            HoleRightBuffer++;
+            if (HoleRightBuffer > 1)
+            {
+                HoleRight = true;
+                HoleRightBuffer = 0;
+            }
+        }
+        else
+        {
+            HoleRight = false;
+            HoleRightBuffer = 0;
         }
     }
 }
