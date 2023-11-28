@@ -76,6 +76,7 @@ public class EnnemiScript : MonoBehaviour
         if (!_myturn) 
         {
             _state = STATE.Idle;
+            _walk_oposite_dir = false;
             return; 
         }
 
@@ -93,6 +94,11 @@ public class EnnemiScript : MonoBehaviour
                 }
                 break;
             case STATE.Moving:
+                if (gamemanager.GetComponent<GameScript>().timer <= 3)
+                {
+                    StartTestShooting();
+                    break;
+                }
                 WaitWalkingStop();
                 if (_jumped && OnGround && RB.velocity.y <= 0)
                 {
