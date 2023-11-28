@@ -7,6 +7,7 @@ using UnityEngine;
 public class BallScript : MonoBehaviour
 {
     [SerializeField] private GameObject ExplosionRadius;
+    private GameScript gamemanager;
 
     private Rigidbody2D RB;
     private Vector2 _awakevel;
@@ -15,9 +16,11 @@ public class BallScript : MonoBehaviour
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
+        gamemanager = GameObject.Find("GameManager").GetComponent<GameScript>();
     }
     private void FixedUpdate()
     {
+        RB.velocity += gamemanager.wind * Time.fixedDeltaTime;
         if (RB.position.y < min_height)
         {
             Destroy(this.gameObject);

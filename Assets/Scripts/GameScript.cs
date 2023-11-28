@@ -25,14 +25,23 @@ public class GameScript : MonoBehaviour
     private Camera cam;
     private float camZ;
 
+    [SerializeField] public Vector2 wind;
+
     private void Start()
     {
         HUD = GameObject.Find("HUD");
         cam = Camera.main;
         camZ = cam.transform.position.z;
+        RandomizeWind();
         EndTurn();
     }
 
+    private void RandomizeWind()
+    {
+        float r = UnityEngine.Random.Range(-7, 7);
+        print(r);
+        wind = new Vector2(1, 0) * r;
+    }
     private void UpdateHUD()
     {
         TextMeshProUGUI hudturn = HUD.transform.Find("TextTurn").GetComponent<TextMeshProUGUI>();

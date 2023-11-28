@@ -192,6 +192,7 @@ public class EnnemiScript : MonoBehaviour
 
             _se_position += _se_velocity * Time.fixedDeltaTime;
             _se_velocity += new Vector2(0, -9.80665f) * Time.fixedDeltaTime;
+            _se_velocity += gamemanager.GetComponent<GameScript>().wind * Time.fixedDeltaTime;
 
             var _raycast = Physics2D.CircleCast(_se_position, 0.5f, _se_velocity.normalized, 0.5f);
 
@@ -275,7 +276,7 @@ public class EnnemiScript : MonoBehaviour
         if (hole)
         {
             HoleLeftBuffer++;
-            if (HoleLeftBuffer > 3)
+            if (HoleLeftBuffer > 5)
             {
                 HoleLeft = true;
                 HoleLeftBuffer = 0;
@@ -294,7 +295,7 @@ public class EnnemiScript : MonoBehaviour
         if (hole)
         {
             HoleRightBuffer++;
-            if (HoleRightBuffer > 3)
+            if (HoleRightBuffer > 5)
             {
                 HoleRight = true;
                 HoleRightBuffer = 0;
