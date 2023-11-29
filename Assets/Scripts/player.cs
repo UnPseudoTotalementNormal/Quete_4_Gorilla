@@ -8,6 +8,8 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
+using System.Linq;
 
 public class player : MonoBehaviour
 {
@@ -37,11 +39,17 @@ public class player : MonoBehaviour
     private float _sprite_angle;
     private Transform _monkesprite;
 
+    private List<Vector2> _se_oldpos = new List<Vector2>(); //se == shoot emulate
+    private Vector2 _se_position;
+    private Vector2 _se_velocity;
+
+    [SerializeField] private GameObject _se_line;
     void Start()
     {
         gamemanager = GameObject.Find("GameManager");
         RB = GetComponent<Rigidbody2D>();
         _monkesprite = transform.Find("MonkeSprite");
+        _se_line = Instantiate(_se_line);
     }
 
     void Update()
@@ -93,6 +101,7 @@ public class player : MonoBehaviour
                 break;
 
             case STATE.Charging:
+                TestShooting();
                 _currentforce += _chargingspeed * Time.fixedDeltaTime;
                 transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, ((_maxforce - _currentforce) / (_maxforce - 0)) * 64, 0);
                 if (_currentforce >= _maxforce)
@@ -105,6 +114,48 @@ public class player : MonoBehaviour
                 transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, 64, 0);
                 transform.Find("Canvas").transform.rotation = Quaternion.Euler(Vector3.forward * _mouseangle);
                 break;
+        }
+    }
+
+    private void TestShooting()
+    {
+        DrawDebugShooting();
+        _se_position = RB.position;
+        _se_oldpos.Clear();
+        Vector2 _shoot_vector = new Vector2((float)Math.Cos(_mouseangle * Mathf.Deg2Rad), (float)Math.Sin(_mouseangle * Mathf.Deg2Rad));
+        _shoot_vector *= _currentforce;
+        _se_velocity = _shoot_vector;
+
+        for (int i = 0; i < 200; i++)
+        {
+            _se_oldpos.Add(_se_position);
+
+            _se_position += _se_velocity * Time.fixedDeltaTime;
+            _se_velocity += new Vector2(0, -9.80665f) * Time.fixedDeltaTime;
+            _se_velocity += gamemanager.GetComponent<GameScript>().wind * Time.fixedDeltaTime;
+
+            var _raycast = Physics2D.CircleCast(_se_position, 0.5f, _se_velocity.normalized, 0.5f);
+
+            if (_raycast.collider != null)
+            {
+                if (_raycast.collider.GetComponent<BoxCollider2D>() != null && _raycast.transform.tag == "Map")
+                {
+                    break;
+                }
+            }
+        }
+    }
+    private void DrawDebugShooting()
+    {
+        _se_line.transform.position = transform.position;
+        LineRenderer line =  _se_line.GetComponent<LineRenderer>();
+        line.positionCount = 0;
+        int pointnum = Mathf.Clamp(30, 0, _se_oldpos.Count() - 1);
+        line.positionCount = pointnum;
+        for (int i = 0; i < pointnum; i++)
+        {
+            Debug.DrawLine(_se_oldpos[i], _se_oldpos[i + 1], Color.red);
+            line.SetPosition(i, _se_oldpos[i]);
         }
     }
 

@@ -36,7 +36,7 @@ public class EnnemiScript : MonoBehaviour
     [SerializeField] private float _maxforce = 15;
     [SerializeField] private float _chargingspeed = 10; //per sec
 
-    private float _rand_angle = 30;
+    private float _rand_angle = 15;
 
     private Rigidbody2D RB;
     private STATE _state = STATE.Idle;
