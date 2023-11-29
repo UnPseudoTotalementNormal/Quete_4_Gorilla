@@ -3,7 +3,15 @@ guid: 290b0ef3d3fa04e47b0a645459c73b22
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - balls: {instanceID: 0}
+  - Jump: {instanceID: 0}
+  - Left: {instanceID: 0}
+  - Right: {instanceID: 0}
+  - Shoot: {instanceID: 0}
+  - Aim: {instanceID: 0}
+  - MousePos: {instanceID: 0}
+  - _se_line: {fileID: 870502625105408504, guid: cfcafe87d49a70d499cc88845088859a, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

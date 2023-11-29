@@ -93,6 +93,7 @@ public class GameScript : MonoBehaviour
 
     private void NextTurn()
     {
+        RandomizeWind();
         RestartTimer();
         numturn++;
         if (GetMember() == null)
