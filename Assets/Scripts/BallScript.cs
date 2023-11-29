@@ -49,6 +49,7 @@ public class BallScript : MonoBehaviour
             GameObject newpart = null;
             newpart = Instantiate(ExplosionParticles);
             newpart.transform.position = transform.position;
+            newpart.transform.position += new Vector3(0, 0, 20);
             newpart.GetComponent<ParticleSystem>().Play();
             Destroy(newpart, 10);
             ExplosionParticles = null;
