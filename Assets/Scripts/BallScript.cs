@@ -21,6 +21,7 @@ public class BallScript : MonoBehaviour
     private void FixedUpdate()
     {
         RB.velocity += gamemanager.wind * Time.fixedDeltaTime;
+        transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(transform.position.y + RB.velocity.y - transform.position.y, transform.position.x + RB.velocity.x - transform.position.x) * Mathf.Rad2Deg);
         if (RB.position.y < min_height)
         {
             Destroy(this.gameObject);
