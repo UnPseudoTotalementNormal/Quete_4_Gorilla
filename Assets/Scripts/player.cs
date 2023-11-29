@@ -105,7 +105,6 @@ public class player : MonoBehaviour
                 }
                 break;
             case STATE.Aiming:
-                transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, 64, 0);
                 transform.Find("Canvas").transform.rotation = Quaternion.Euler(Vector3.forward * _mouseangle);
                 break;
             case STATE.Escaping:

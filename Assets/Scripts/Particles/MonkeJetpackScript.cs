@@ -5,15 +5,23 @@ using UnityEngine.UIElements;
 
 public class MonkeJetpackScript : MonoBehaviour
 {
-    GameObject _monkesprite;
+    private Transform _monkesprite;
+    private SpriteRenderer _spriteRenderer;
     void Start()
     {
-        _monkesprite = GetComponentInParent<GameObject>();
+        _monkesprite = transform.parent.GetComponent<Transform>();
+        _spriteRenderer = _monkesprite.GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.position = _monkesprite.transform.Find("FirePartLeftPos").GetComponent<Transform>().position;
+        if (_spriteRenderer.flipX)
+        {
+            transform.position = _monkesprite.Find("FirePartRightPos").position;
+        }
+        else
+        {
+            transform.position = _monkesprite.Find("FirePartLeftPos").position;
+        }
     }
 }
