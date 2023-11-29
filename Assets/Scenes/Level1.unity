@@ -1049,6 +1049,7 @@ MonoBehaviour:
   Shoot: {fileID: -5051700757941643723, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
   Aim: {fileID: -1875453882141459782, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
   MousePos: {fileID: -391296142053751541, guid: d77952221ab478043bcc8e6709b4f568, type: 3}
+  _se_line: {fileID: 870502625105408504, guid: cfcafe87d49a70d499cc88845088859a, type: 3}
 --- !u!212 &587185328
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1789,6 +1790,7 @@ MonoBehaviour:
   maxtimer: 15
   timerafteraction: 8
   Memberturn: {fileID: 0}
+  wind: {x: 0, y: 0}
 --- !u!4 &913149316
 Transform:
   m_ObjectHideFlags: 0

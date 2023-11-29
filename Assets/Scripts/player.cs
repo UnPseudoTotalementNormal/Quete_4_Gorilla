@@ -68,6 +68,7 @@ public class player : MonoBehaviour
         else RB.velocity -= new Vector2(0.5f * RB.velocity.normalized.x, 0);
 
         _sprite_angle = 0;
+        _se_line.SetActive(false);
 
         turncheck();
         if (!_myturn) 
@@ -101,6 +102,7 @@ public class player : MonoBehaviour
                 break;
 
             case STATE.Charging:
+                _se_line.SetActive(true);
                 TestShooting();
                 _currentforce += _chargingspeed * Time.fixedDeltaTime;
                 transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, ((_maxforce - _currentforce) / (_maxforce - 0)) * 64, 0);
