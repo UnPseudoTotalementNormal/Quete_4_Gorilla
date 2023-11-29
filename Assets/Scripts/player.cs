@@ -20,6 +20,7 @@ public class player : MonoBehaviour
         Normal,
         Charging,
         Aiming,
+        Escaping,
     }
 
     private STATE _state = STATE.Normal;
@@ -84,21 +85,14 @@ public class player : MonoBehaviour
             case STATE.Normal:
                 if (Left.action.inProgress)
                 {
-                    RB.velocity = new Vector2(-5f, RB.velocity.y);
-                    _monkesprite.GetComponent<SpriteRenderer>().flipX = true;
-                    _monkesprite.Find("FirePart").GetComponent<Transform>().position = _monkesprite.Find("FirePartRightPos").GetComponent<Transform>().position;
-                    _sprite_angle = 30;
+                    WalkLeft();
                 }
 
                 if (Right.action.inProgress)
                 {
-                    RB.velocity = new Vector2(5f, RB.velocity.y);
-                    _monkesprite.GetComponent<SpriteRenderer>().flipX = false;
-                    _monkesprite.Find("FirePart").GetComponent<Transform>().position = _monkesprite.Find("FirePartLeftPos").GetComponent<Transform>().position;
-                    _sprite_angle = -30;
+                    WalkRight();
                 }
                 break;
-
             case STATE.Charging:
                 _se_line.SetActive(true);
                 TestShooting();
@@ -114,7 +108,33 @@ public class player : MonoBehaviour
                 transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, 64, 0);
                 transform.Find("Canvas").transform.rotation = Quaternion.Euler(Vector3.forward * _mouseangle);
                 break;
+            case STATE.Escaping:
+                if (Left.action.inProgress)
+                {
+                    WalkLeft();
+                }
+                if (Right.action.inProgress)
+                {
+                    WalkRight();
+                }
+                break;
         }
+    }
+
+    private void WalkLeft()
+    {
+        RB.velocity = new Vector2(-5f, RB.velocity.y);
+        _monkesprite.GetComponent<SpriteRenderer>().flipX = true;
+        _monkesprite.Find("FirePart").GetComponent<Transform>().position = _monkesprite.Find("FirePartRightPos").GetComponent<Transform>().position;
+        _sprite_angle = 30;
+    }
+
+    private void WalkRight()
+    {
+        RB.velocity = new Vector2(5f, RB.velocity.y);
+        _monkesprite.GetComponent<SpriteRenderer>().flipX = false;
+        _monkesprite.Find("FirePart").GetComponent<Transform>().position = _monkesprite.Find("FirePartLeftPos").GetComponent<Transform>().position;
+        _sprite_angle = -30;
     }
 
     private void TestShooting()
@@ -167,7 +187,7 @@ public class player : MonoBehaviour
     public void JumpInput(InputAction.CallbackContext ctx)
     {
         if (!_myturn) { return; }
-        if (_state == STATE.Normal)
+        if (_state == STATE.Normal || _state == STATE.Escaping)
         {
             if (ctx.phase == InputActionPhase.Started && OnGround)
             {
@@ -186,14 +206,15 @@ public class player : MonoBehaviour
         }
         if (ctx.phase == InputActionPhase.Canceled && _state == STATE.Charging)
         {
-            _state = STATE.Normal;
+            _state = STATE.Escaping;
+            transform.Find("Canvas").Find("ChargingBar").gameObject.SetActive(false);
             ShootFunction();
         }
     }
 
     public void AimInput(InputAction.CallbackContext ctx)
     {
-        if (!_myturn) { return; }
+        if (!_myturn || _state == STATE.Charging || _state == STATE.Escaping) { return; }
         switch (ctx.phase)
         {
             case InputActionPhase.Started:

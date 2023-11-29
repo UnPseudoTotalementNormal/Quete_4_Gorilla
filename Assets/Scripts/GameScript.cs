@@ -199,7 +199,7 @@ public class GameScript : MonoBehaviour
         else
         {
             float distance = (following.transform.position - following2.transform.position).magnitude;
-            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, distance/2.5f, 5f * Time.fixedDeltaTime);
+            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, distance/2.25f, 5f * Time.fixedDeltaTime);
             cam.transform.position = (following.transform.position + following2.transform.position) / 2;
             cam.transform.position += new Vector3(0, 0, -cam.transform.position.z + camZ);
         }
