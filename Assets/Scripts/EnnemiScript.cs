@@ -89,9 +89,9 @@ public class EnnemiScript : MonoBehaviour
                 break;
 
             case STATE.TestingShooting:
-                for (int i = 0; i < 200; i++)
+                for (int i = 0; i < 5; i++)
                 {
-                    StartCoroutine(TestShooting());
+                    alltestshooting(30);
                     if (_state != STATE.TestingShooting) break;
                 }
                 break;
@@ -123,6 +123,72 @@ public class EnnemiScript : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    private void alltestshooting(int coroutine_num)
+    {
+        _angle += 0.0015f;
+        float base_offset_angle = 180 / coroutine_num;
+        if (_angle + ((base_offset_angle * (coroutine_num - 1) + 180) * Mathf.Deg2Rad) > 3 * Math.PI / 2)
+        {
+            _angle = (float)Math.PI / 2f;
+            _shoot_force += 1;
+        }
+        if (_shoot_force >= _maxforce)
+        {
+            _state = STATE.Moving;
+            return;
+        }
+
+        for (int i = 0; i <= coroutine_num; i++)
+        {
+            float offset_angle = base_offset_angle * i + 180;
+            StartCoroutine(TestShooting(_angle - (offset_angle * Mathf.Deg2Rad)));
+            if (_state != STATE.TestingShooting) break;
+        }
+    }
+    IEnumerator TestShooting(float angle_test)
+    {
+        _se_oldpos.Clear();
+        Vector2 _se_c_position;
+        Vector2 _se_c_velocity;
+        _se_c_position = RB.position;
+        Vector2 _shoot_vector = new Vector2((float)Math.Cos(angle_test), (float)Math.Sin(angle_test));
+        _shoot_vector *= _shoot_force;
+        _se_c_velocity = _shoot_vector;
+
+        for (int i = 0; i < _se_iteration; i++)
+        {
+            _se_oldpos.Add(_se_c_position);
+            DrawDebugShooting();
+
+            _se_c_position += _se_c_velocity * Time.fixedDeltaTime;
+            _se_c_velocity += new Vector2(0, -9.80665f) * Time.fixedDeltaTime;
+            _se_c_velocity += gamemanager.GetComponent<GameScript>().wind * Time.fixedDeltaTime;
+
+            var _raycast = Physics2D.CircleCast(_se_c_position, 0.5f, _se_c_velocity.normalized, 0.5f);
+
+            if (_raycast.collider != null)
+            {
+                if (_raycast.collider.GetComponent<BoxCollider2D>() != null && _raycast.transform.tag == "Map")
+                {
+                    break;
+                }
+            }
+
+            if (_target.GetComponent<CapsuleCollider2D>().OverlapPoint(_se_c_position))
+            {
+                float angletest = UnityEngine.Random.Range(-_rand_angle, _rand_angle);
+                Debug.Log(angletest);
+                float angle_randomized = angle_test + (angletest * Mathf.Deg2Rad);
+                _shoot_vector = new Vector2((float)Math.Cos(angle_randomized), (float)Math.Sin(angle_randomized));
+                _shoot_vector *= _shoot_force;
+                Shoot(_shoot_vector);
+                _state = STATE.Idle;
+                break;
+            }
+        }
+        yield return null;
     }
 
     private void WalkLeft()
@@ -168,58 +234,8 @@ public class EnnemiScript : MonoBehaviour
             StartTestShooting();
         }
     }
-    IEnumerator TestShooting()
-    {
-        DrawDebugShooting();
-        _angle += 0.0015f;
-        if (_angle > 3 * Math.PI/2)
-        {
-            _angle = (float)Math.PI/2.2f;
-            _shoot_force += 1;
-        }
-        if (_shoot_force >= _maxforce) 
-        { 
-            _state = STATE.Moving;
-            yield return null;
-        }
-        _se_position = RB.position;
-        _se_oldpos.Clear();
-        Vector2 _shoot_vector = new Vector2((float)Math.Cos(_angle), (float)Math.Sin(_angle));
-        _shoot_vector *= _shoot_force;
-        _se_velocity = _shoot_vector;
-        
-        for (int i = 0; i < _se_iteration; i++)
-        {
-            _se_oldpos.Add(_se_position);
 
-            _se_position += _se_velocity * Time.fixedDeltaTime;
-            _se_velocity += new Vector2(0, -9.80665f) * Time.fixedDeltaTime;
-            _se_velocity += gamemanager.GetComponent<GameScript>().wind * Time.fixedDeltaTime;
-
-            var _raycast = Physics2D.CircleCast(_se_position, 0.5f, _se_velocity.normalized, 0.5f);
-
-            if (_raycast.collider != null)
-            {
-                if (_raycast.collider.GetComponent<BoxCollider2D>() != null && _raycast.transform.tag == "Map") 
-                {
-                    break;
-                }
-            }
-
-            if (_target.GetComponent<CapsuleCollider2D>().OverlapPoint(_se_position))
-            {
-                float angletest = UnityEngine.Random.Range(-_rand_angle, _rand_angle);
-                Debug.Log(angletest);
-                float angle_randomized = _angle + (angletest * Mathf.Deg2Rad);
-                _shoot_vector = new Vector2((float)Math.Cos(angle_randomized), (float)Math.Sin(angle_randomized));
-                _shoot_vector *= _shoot_force;
-                Shoot(_shoot_vector);
-                _state = STATE.Idle;
-                break;
-            }
-        }
-        yield return null;
-    }
+    
     private void StartTestShooting()
     {
         _angle = (float)Math.PI / 2;
