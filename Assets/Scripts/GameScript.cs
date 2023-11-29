@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.Processors;
 using UnityEngine.SceneManagement;
 
 public class GameScript : MonoBehaviour
@@ -20,6 +21,7 @@ public class GameScript : MonoBehaviour
     private int numturn = 1;
 
     private GameObject following_object;
+    private GameObject following_object2;
     private bool was_following = false;
 
     private Camera cam;
@@ -87,13 +89,24 @@ public class GameScript : MonoBehaviour
             timer = timerafteraction;
         }
     }
-    public void EndTurn(GameObject follow_this = null)
+
+    public void FollowThis(GameObject follow_this = null, GameObject follow_this2 = null)
+    {
+        if (follow_this != null)
+        {
+            following_object = follow_this;
+            following_object2 = follow_this2;
+            return;
+        }
+    }
+    public void EndTurn(GameObject follow_this = null, GameObject follow_this2 = null)
     {
         Memberturn = null;
         if (follow_this != null)
         {
             was_following = true;
             following_object = follow_this;
+            following_object2 = follow_this2;
             return;
         }
         StartCoroutine(CodeAfterDelay(NextTurn, 3f));
@@ -102,6 +115,8 @@ public class GameScript : MonoBehaviour
 
     private void NextTurn()
     {
+        following_object = null;
+        following_object2 = null;
         RandomizeWind();
         RestartTimer();
         numturn++;
@@ -147,7 +162,14 @@ public class GameScript : MonoBehaviour
         UpdateHUD();
         if (following_object !=  null)
         {
-            CameraFollow(following_object);
+            if (following_object2 != null)
+            {
+                CameraFollow(following_object, following_object2);
+            }
+            else
+            {
+                CameraFollow(following_object);
+            }
         }
         else if (was_following)
         {
@@ -157,14 +179,30 @@ public class GameScript : MonoBehaviour
 
         if (Memberturn != null)
         {
-            CameraFollow(Memberturn);
+            if (following_object2 == null)
+            {
+                CameraFollow(Memberturn);
+            }
             RunTimer();
         }
     }
 
-    private void CameraFollow(GameObject following)
+    private void CameraFollow(GameObject following, GameObject following2 = null)
     {
-        cam.transform.position = Vector3.Lerp(cam.transform.position, following.transform.position, 4f * Time.fixedDeltaTime);
-        cam.transform.position += new Vector3(0, 0, -cam.transform.position.z + camZ);
+        
+        if (following2 == null)
+        {
+            cam.transform.position = Vector3.Lerp(cam.transform.position, following.transform.position, 4f * Time.fixedDeltaTime);
+            cam.transform.position += new Vector3(0, 0, -cam.transform.position.z + camZ);
+            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, 9, 5f * Time.fixedDeltaTime);
+        }
+        else
+        {
+            float distance = (following.transform.position - following2.transform.position).magnitude;
+            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, distance/2.5f, 5f * Time.fixedDeltaTime);
+            cam.transform.position = (following.transform.position + following2.transform.position) / 2;
+            cam.transform.position += new Vector3(0, 0, -cam.transform.position.z + camZ);
+        }
+        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, 9, 14);
     }
 }

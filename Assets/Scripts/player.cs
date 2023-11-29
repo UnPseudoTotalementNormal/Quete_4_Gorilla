@@ -84,7 +84,6 @@ public class player : MonoBehaviour
             case STATE.Normal:
                 if (Left.action.inProgress)
                 {
-                    gamemanager.GetComponent<GameScript>().ActionTimer();
                     RB.velocity = new Vector2(-5f, RB.velocity.y);
                     _monkesprite.GetComponent<SpriteRenderer>().flipX = true;
                     _monkesprite.Find("FirePart").GetComponent<Transform>().position = _monkesprite.Find("FirePartRightPos").GetComponent<Transform>().position;
@@ -93,7 +92,6 @@ public class player : MonoBehaviour
 
                 if (Right.action.inProgress)
                 {
-                    gamemanager.GetComponent<GameScript>().ActionTimer();
                     RB.velocity = new Vector2(5f, RB.velocity.y);
                     _monkesprite.GetComponent<SpriteRenderer>().flipX = false;
                     _monkesprite.Find("FirePart").GetComponent<Transform>().position = _monkesprite.Find("FirePartLeftPos").GetComponent<Transform>().position;
@@ -173,7 +171,6 @@ public class player : MonoBehaviour
         {
             if (ctx.phase == InputActionPhase.Started && OnGround)
             {
-                gamemanager.GetComponent<GameScript>().ActionTimer();
                 RB.velocity += Vector2.up * 14;
             }
         }
@@ -213,13 +210,16 @@ public class player : MonoBehaviour
 
     private void ShootFunction()
     {
+        gamemanager.GetComponent<GameScript>().ActionTimer();
+
         Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
         Vector2 shootvector = _mousepos - Ppos;
         GameObject newball;
         newball = Instantiate(balls, transform.position, transform.rotation);
 
         newball.GetComponent<BallScript>().SetAngle(shootvector.normalized, _currentforce);
-        gamemanager.GetComponent<GameScript>().EndTurn(newball);
+        gamemanager.GetComponent<GameScript>().FollowThis(newball, this.gameObject);
+        //gamemanager.GetComponent<GameScript>().EndTurn(newball, this.gameObject);
     }
 
     public void GetMousePosition(InputAction.CallbackContext ctx)

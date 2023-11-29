@@ -42,7 +42,7 @@ public class EnnemiScript : MonoBehaviour
     private STATE _state = STATE.Idle;
 
     private float _shoot_timer = 0;
-    private float _shoot_max_timer = 1f; //in seconds
+    private float _shoot_max_timer = 1.5f; //in seconds
 
     private float _angle = 0;
     private float _shoot_force;
@@ -51,7 +51,7 @@ public class EnnemiScript : MonoBehaviour
 
     private GameObject _target;
 
-    private int _se_iteration = 400;
+    private int _se_iteration = 200;
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
@@ -60,6 +60,12 @@ public class EnnemiScript : MonoBehaviour
     void Start()
     {
         gamemanager = GameObject.Find("GameManager");
+    }
+
+    private void Update()
+    {
+        GameObject _bloonsprite = transform.Find("BloonSprite").gameObject;
+        _bloonsprite.transform.SetLocalPositionAndRotation(new Vector3(0, 0.2f + 0.2f * Mathf.Sin(Time.time * 5), 0), _bloonsprite.transform.rotation);
     }
     private void FixedUpdate()
     {
@@ -121,7 +127,6 @@ public class EnnemiScript : MonoBehaviour
 
     private void alltestshooting(int coroutine_num)
     {
-        Debug.Log(_angle);
         float base_offset_angle = 180 / coroutine_num;
         _angle = (float)Math.PI / 2f;
         _shoot_force += 1;
@@ -175,7 +180,6 @@ public class EnnemiScript : MonoBehaviour
             if (_target.GetComponent<CapsuleCollider2D>().OverlapPoint(_se_c_position))
             {
                 float angletest = UnityEngine.Random.Range(-_rand_angle, _rand_angle);
-                Debug.Log(angletest);
                 float angle_randomized = angle_test + (angletest * Mathf.Deg2Rad);
                 _shoot_vector = new Vector2((float)Math.Cos(angle_randomized), (float)Math.Sin(angle_randomized));
                 _shoot_vector *= _shoot_force;
@@ -206,9 +210,9 @@ public class EnnemiScript : MonoBehaviour
             _old_jumpx = transform.position.x;
             _jumped = true;
             RB.velocity = Vector2.up * 14;
-            if (_walking_timer > 1) 
+            if (_walking_timer > _walking_max_timer/2) 
             {
-                _walking_timer = 1;
+                _walking_timer = _walking_max_timer/2;
             }
         }
     }
@@ -254,7 +258,7 @@ public class EnnemiScript : MonoBehaviour
         GameObject newball = Instantiate(balls, transform.position, transform.rotation);
         newball.GetComponent<BallScript>().SetAngle(shootvector, 1.008f);
 
-        gamemanager.GetComponent<GameScript>().EndTurn(newball);
+        gamemanager.GetComponent<GameScript>().EndTurn(newball, this.gameObject);
     }
 
     private void turncheck()

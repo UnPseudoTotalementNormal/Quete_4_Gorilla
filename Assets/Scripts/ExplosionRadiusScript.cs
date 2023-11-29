@@ -34,7 +34,7 @@ public class ExplosionRadiusScript : MonoBehaviour
         }
         else
         {
-            Debug.Log(collision);
+            //Debug.Log(collision);
             if (collision.GetComponent<HealthComponent>() != null)
             {
                 collision.GetComponent<HealthComponent>().ReduceHp(1);
