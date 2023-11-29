@@ -100,7 +100,7 @@ public class player : MonoBehaviour
                 transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, ((_maxforce - _currentforce) / (_maxforce - 0)) * 64, 0);
                 if (_currentforce >= _maxforce)
                 {
-                    _state = STATE.Normal;
+                    _state = STATE.Escaping;
                     ShootFunction();
                 }
                 break;
@@ -109,6 +109,7 @@ public class player : MonoBehaviour
                 transform.Find("Canvas").transform.rotation = Quaternion.Euler(Vector3.forward * _mouseangle);
                 break;
             case STATE.Escaping:
+                transform.Find("Canvas").Find("ChargingBar").gameObject.SetActive(false);
                 if (Left.action.inProgress)
                 {
                     WalkLeft();
@@ -207,7 +208,6 @@ public class player : MonoBehaviour
         if (ctx.phase == InputActionPhase.Canceled && _state == STATE.Charging)
         {
             _state = STATE.Escaping;
-            transform.Find("Canvas").Find("ChargingBar").gameObject.SetActive(false);
             ShootFunction();
         }
     }
@@ -219,6 +219,8 @@ public class player : MonoBehaviour
         {
             case InputActionPhase.Started:
                 _state = STATE.Aiming;
+                transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, 64, 0);
+                transform.Find("Canvas").transform.rotation = Quaternion.Euler(Vector3.forward * _mouseangle);
                 transform.Find("Canvas").Find("ChargingBar").gameObject.SetActive(true);
                 break;
             case InputActionPhase.Canceled:

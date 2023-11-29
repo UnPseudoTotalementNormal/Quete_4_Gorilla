@@ -14,6 +14,7 @@ public class EnnemiScript : MonoBehaviour
         Idle,
         TestingShooting,
         Moving,
+        Escaping,
     }
 
     private bool OnGround;
@@ -122,6 +123,16 @@ public class EnnemiScript : MonoBehaviour
                     else WalkLeft();
                 }
                 break;
+            case STATE.Escaping:
+                if (_target.transform.position.x - transform.transform.position.x > 0)
+                {
+                    WalkLeft();
+                }
+                else
+                {
+                    WalkRight();
+                }
+                break;
         }
     }
 
@@ -184,7 +195,6 @@ public class EnnemiScript : MonoBehaviour
                 _shoot_vector = new Vector2((float)Math.Cos(angle_randomized), (float)Math.Sin(angle_randomized));
                 _shoot_vector *= _shoot_force;
                 Shoot(_shoot_vector);
-                _state = STATE.Idle;
                 break;
             }
         }
@@ -257,8 +267,9 @@ public class EnnemiScript : MonoBehaviour
     {
         GameObject newball = Instantiate(balls, transform.position, transform.rotation);
         newball.GetComponent<BallScript>().SetAngle(shootvector, 1.008f);
-
-        gamemanager.GetComponent<GameScript>().EndTurn(newball, this.gameObject);
+        _state = STATE.Escaping;
+        gamemanager.GetComponent<GameScript>().ActionTimer();
+        gamemanager.GetComponent<GameScript>().FollowThis(newball, this.gameObject);
     }
 
     private void turncheck()
