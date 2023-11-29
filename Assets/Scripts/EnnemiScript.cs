@@ -29,7 +29,7 @@ public class EnnemiScript : MonoBehaviour
     private bool _jumped = false;
     private float _old_jumpx;
     private float _walking_timer = 0f;
-    private float _walking_max_timer = 2f;
+    private float _walking_max_timer = 1f;
 
     [SerializeField] private GameObject balls;
 
@@ -48,8 +48,6 @@ public class EnnemiScript : MonoBehaviour
     private float _shoot_force;
 
     private List<Vector2> _se_oldpos = new List<Vector2>(); //se == shoot emulate
-    private Vector2 _se_position;
-    private Vector2 _se_velocity;
 
     private GameObject _target;
 
@@ -89,11 +87,7 @@ public class EnnemiScript : MonoBehaviour
                 break;
 
             case STATE.TestingShooting:
-                for (int i = 0; i < 5; i++)
-                {
-                    alltestshooting(30);
-                    if (_state != STATE.TestingShooting) break;
-                }
+                alltestshooting(60);
                 break;
             case STATE.Moving:
                 if (gamemanager.GetComponent<GameScript>().timer <= 3)
@@ -127,13 +121,10 @@ public class EnnemiScript : MonoBehaviour
 
     private void alltestshooting(int coroutine_num)
     {
-        _angle += 0.0015f;
+        Debug.Log(_angle);
         float base_offset_angle = 180 / coroutine_num;
-        if (_angle + ((base_offset_angle * (coroutine_num - 1) + 180) * Mathf.Deg2Rad) > 3 * Math.PI / 2)
-        {
-            _angle = (float)Math.PI / 2f;
-            _shoot_force += 1;
-        }
+        _angle = (float)Math.PI / 2f;
+        _shoot_force += 1;
         if (_shoot_force >= _maxforce)
         {
             _state = STATE.Moving;
@@ -142,7 +133,12 @@ public class EnnemiScript : MonoBehaviour
 
         for (int i = 0; i <= coroutine_num; i++)
         {
-            float offset_angle = base_offset_angle * i + 180;
+            float offset_angle = 0;
+            if (_target.transform.position.x - transform.transform.position.x > 0)
+            {
+                offset_angle = base_offset_angle * i;
+            }
+            else offset_angle = base_offset_angle * i + 180;
             StartCoroutine(TestShooting(_angle - (offset_angle * Mathf.Deg2Rad)));
             if (_state != STATE.TestingShooting) break;
         }
@@ -166,7 +162,7 @@ public class EnnemiScript : MonoBehaviour
             _se_c_velocity += new Vector2(0, -9.80665f) * Time.fixedDeltaTime;
             _se_c_velocity += gamemanager.GetComponent<GameScript>().wind * Time.fixedDeltaTime;
 
-            var _raycast = Physics2D.CircleCast(_se_c_position, 0.5f, _se_c_velocity.normalized, 0.5f);
+            var _raycast = Physics2D.CircleCast(_se_c_position, 0.5f, Vector2.zero, 0.5f);
 
             if (_raycast.collider != null)
             {
