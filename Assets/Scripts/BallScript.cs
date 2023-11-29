@@ -7,6 +7,7 @@ using UnityEngine;
 public class BallScript : MonoBehaviour
 {
     [SerializeField] private GameObject ExplosionRadius;
+    [SerializeField] private GameObject ExplosionParticles;
     private GameScript gamemanager;
 
     private Rigidbody2D RB;
@@ -42,6 +43,15 @@ public class BallScript : MonoBehaviour
             newexplosion = Instantiate(ExplosionRadius);
             newexplosion.transform.position = transform.position;
             ExplosionRadius = null;
+        }
+        if (ExplosionParticles != null)
+        {
+            GameObject newpart = null;
+            newpart = Instantiate(ExplosionParticles);
+            newpart.transform.position = transform.position;
+            newpart.GetComponent<ParticleSystem>().Play();
+            Destroy(newpart, 10);
+            ExplosionParticles = null;
         }
         Destroy(this.gameObject);
     }
