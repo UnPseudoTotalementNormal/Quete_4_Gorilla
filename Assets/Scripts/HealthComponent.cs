@@ -16,7 +16,9 @@ public class HealthComponent : MonoBehaviour
         }
         if (damage_particle != null)
         {
-            Destroy(Instantiate(damage_particle, transform.position, Quaternion.identity), 5);
+            GameObject newpart = Instantiate(damage_particle, transform.position, Quaternion.identity);
+            newpart.GetComponent<ParticleSystem>().Play();
+            Destroy(newpart.gameObject, 5);
         }
     }
 }

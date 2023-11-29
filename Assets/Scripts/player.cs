@@ -189,6 +189,7 @@ public class player : MonoBehaviour
         {
             if (ctx.phase == InputActionPhase.Started && OnGround)
             {
+                _monkesprite.Find("FirePart").Find("Burst").GetComponent<ParticleSystem>().Play();
                 RB.velocity += Vector2.up * 14;
             }
         }
