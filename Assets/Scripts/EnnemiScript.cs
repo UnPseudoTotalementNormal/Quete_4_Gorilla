@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using System;
+using UnityEditor;
 
 public class EnnemiScript : MonoBehaviour
 {
@@ -67,6 +68,8 @@ public class EnnemiScript : MonoBehaviour
     {
         GameObject _bloonsprite = transform.Find("BloonSprite").gameObject;
         _bloonsprite.transform.SetLocalPositionAndRotation(new Vector3(0, 0.2f + 0.2f * Mathf.Sin(Time.time * 5), 0), _bloonsprite.transform.rotation);
+        Sprite newsprite = Resources.Load<Sprite>("Sprites/Bloons" + GetComponent<HealthComponent>().health.ToString());
+        _bloonsprite.GetComponent<SpriteRenderer>().sprite = newsprite;
     }
     private void FixedUpdate()
     {
