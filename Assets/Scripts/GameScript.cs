@@ -40,6 +40,15 @@ public class GameScript : MonoBehaviour
     {
         float r = UnityEngine.Random.Range(-7, 7);
         wind = new Vector2(1, 0) * r;
+        if (wind.x > 0)
+        {
+            HUD.transform.Find("WindArrow").transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        else
+        {
+            HUD.transform.Find("WindArrow").transform.rotation = Quaternion.Euler(0, 0, 180);
+        }
+        HUD.transform.Find("WindText").GetComponent<TextMeshProUGUI>().text = Mathf.Abs(wind.x).ToString() + " m/s";
     }
     private void UpdateHUD()
     {
