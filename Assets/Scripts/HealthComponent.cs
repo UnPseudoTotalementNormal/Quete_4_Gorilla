@@ -5,6 +5,7 @@ using UnityEngine;
 public class HealthComponent : MonoBehaviour
 {
     [SerializeField] public int health = 3;
+    [SerializeField] private GameObject damage_particle;
 
     public void ReduceHp(int hp)
     {
@@ -12,6 +13,10 @@ public class HealthComponent : MonoBehaviour
         if (health <= 0)
         {
             Destroy(GetComponentInParent<Transform>().gameObject);
+        }
+        if (damage_particle != null)
+        {
+            Destroy(Instantiate(damage_particle, transform.position, Quaternion.identity), 5);
         }
     }
 }
