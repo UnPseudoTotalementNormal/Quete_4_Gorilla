@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Map2script : MonoBehaviour
 {
-    [SerializeField] int startX, startY;
-    [SerializeField] int width, height;
-    [SerializeField] int minHeight, maxHeight;
+    [SerializeField] public int startX, startY;
+    [SerializeField] public int width, height;
+    [SerializeField] public int minHeight, maxHeight;
     [SerializeField] int maxVariation;
     [SerializeField] int repeatNum;
     [SerializeField] GameObject Dirt, Grass;

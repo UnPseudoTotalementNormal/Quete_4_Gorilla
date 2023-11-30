@@ -20,8 +20,10 @@ public class GameScript : MonoBehaviour
     [SerializeField] private float timerafteraction = 5;
 
     public GameObject Memberturn;
-    private string teamturn;
+    public string teamturn;
     private int numturn = 1;
+
+    private int wave = 1;
 
     private GameObject following_object;
     private GameObject following_object2;
@@ -32,8 +34,14 @@ public class GameScript : MonoBehaviour
 
     [SerializeField] public Vector2 wind;
 
+    int map_min;
+    int map_max;
+    int map_y;
     private void Start()
     {
+        map_min = GameObject.Find("Map2").GetComponent<Map2script>().startX;
+        map_max = GameObject.Find("Map2").GetComponent<Map2script>().width - 1;
+        map_y = GameObject.Find("Map2").GetComponent<Map2script>().minHeight;
         HUD = GameObject.Find("HUD");
         cam = Camera.main;
         camZ = cam.transform.position.z;
@@ -43,6 +51,10 @@ public class GameScript : MonoBehaviour
 
     private void SpawnEntity(string entity, Vector2 pos, int hp)
     {
+        if (pos == Vector2.zero)
+        {
+            pos = new Vector2(UnityEngine.Random.Range(map_min, map_max), map_y + 3);
+        }
         int i = 1;
         string newname;
         switch (entity)
@@ -152,9 +164,38 @@ public class GameScript : MonoBehaviour
         RandomizeWind();
         RestartTimer();
         numturn++;
-        if (GetMember() == null)
+        if (GetMember(true) == null)
         {
             ChangeTeam();
+        }
+    }
+
+    private void NextWave()
+    {
+        wave += 1;
+        switch (wave)
+        {
+            case 2:
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                break;
+            case 3:
+                SpawnEntity("Bloon", Vector2.zero, 2);
+                break;
+            case 4:
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                break;
+            case 5:
+                SpawnEntity("Bloon", Vector2.zero, 3);
+                break;
+            case 6:
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                SpawnEntity("Bloon", Vector2.zero, 2);
+                break;
+            default:
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                break;
         }
     }
     IEnumerator CodeAfterDelay(Action nextfunction, float delay)
@@ -165,6 +206,9 @@ public class GameScript : MonoBehaviour
 
     private void ChangeTeam()
     {
+        following_object = null;
+        following_object2 = null;
+        Memberturn = null;
         numturn = 1;
         switch (teamturn)
         {
@@ -178,15 +222,33 @@ public class GameScript : MonoBehaviour
                 teamturn = "Monke";
                 break;
         }
-        if (GetMember() == null)
+        if (GetMember(true) == null)
         {
-            SceneManager.LoadScene("MainMenu");
+            switch (teamturn)
+            {
+                case "Monke":
+                    SceneManager.LoadScene("MainMenu");
+                    break;
+                case "Bloon":
+                    NextWave();
+                    FollowThis(GetMember(false));
+                    StartCoroutine(CodeAfterDelay(ChangeTeam, 2));
+                    break;
+            }
+            
         }
     }
 
-    private GameObject GetMember()
+    private GameObject GetMember(bool set = true)
     {
-        return Memberturn = GameObject.Find(teamturn + numturn.ToString()) ;
+        if (set) 
+        {
+            return Memberturn = GameObject.Find(teamturn + numturn.ToString());
+        }
+        else
+        {
+            return GameObject.Find(teamturn + numturn.ToString());
+        }
     }
 
     private void FixedUpdate()

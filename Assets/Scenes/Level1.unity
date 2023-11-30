@@ -950,7 +950,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startX: -25
   startY: -30
-  width: 60
+  width: 59
   height: 10
   minHeight: 3
   maxHeight: -10
