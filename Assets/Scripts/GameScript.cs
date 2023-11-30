@@ -10,6 +10,9 @@ using UnityEngine.SceneManagement;
 
 public class GameScript : MonoBehaviour
 {
+    [SerializeField] private GameObject MONKE;
+    [SerializeField] private GameObject BLOON;
+
     private GameObject HUD;
 
     public float timer;
@@ -36,6 +39,35 @@ public class GameScript : MonoBehaviour
         camZ = cam.transform.position.z;
         RandomizeWind();
         EndTurn();
+    }
+
+    private void SpawnEntity(string entity, Vector2 pos, int hp)
+    {
+        int i = 1;
+        string newname;
+        switch (entity)
+        {
+            case "Monke":
+                while (GameObject.Find("Monke"+i.ToString()) != null)
+                {
+                    i++;
+                }
+                newname = "Monke" + i.ToString();
+                GameObject newmonke = Instantiate(MONKE, pos, Quaternion.identity);
+                newmonke.name = newname;
+                newmonke.GetComponent<HealthComponent>().health = hp;
+                break;
+            case "Bloon":
+                while (GameObject.Find("Bloon" + i.ToString()) != null)
+                {
+                    i++;
+                }
+                newname = "Bloon" + i.ToString();
+                GameObject newbloon = Instantiate(BLOON, pos, Quaternion.identity);
+                newbloon.name = newname;
+                newbloon.GetComponent<HealthComponent>().health = hp;
+                break;
+        }
     }
 
     private void RandomizeWind()
