@@ -60,7 +60,9 @@ public class player : MonoBehaviour
         float nextrot = Mathf.LerpAngle(currrot, _sprite_angle, 6f * Time.deltaTime);
         monkeform.transform.rotation = Quaternion.Euler(Vector3.forward * nextrot);
         monkeform.transform.SetLocalPositionAndRotation(new Vector3(0, 0.2f + 0.2f * Mathf.Sin(Time.time * 5), 0), monkeform.transform.rotation);
-        
+        Sprite newsprite = Resources.Load<Sprite>("Sprites/MONKE" + GetComponent<HealthComponent>().health.ToString());
+        _monkesprite.GetComponent<SpriteRenderer>().sprite = newsprite;
+
     }
 
     void FixedUpdate()
