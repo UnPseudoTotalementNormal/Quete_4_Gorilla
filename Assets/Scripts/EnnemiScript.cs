@@ -16,6 +16,7 @@ public class EnnemiScript : MonoBehaviour
         TestingShooting,
         Moving,
         Escaping,
+        SHOOTWALL,
     }
 
     private bool OnGround;
@@ -32,6 +33,8 @@ public class EnnemiScript : MonoBehaviour
     private float _old_jumpx;
     private float _walking_timer = 0f;
     private float _walking_max_timer = 1f;
+    private float _shootwall_timer = 0f;
+    private float _shootwall_max_timer = 2f;
 
     [SerializeField] private GameObject balls;
 
@@ -44,7 +47,7 @@ public class EnnemiScript : MonoBehaviour
     private STATE _state = STATE.Idle;
 
     private float _shoot_timer = 0;
-    private float _shoot_max_timer = 1.5f; //in seconds
+    private float _shoot_max_timer = 0.5f; //in seconds
 
     private float _angle = 0;
     private float _shoot_force;
@@ -52,6 +55,7 @@ public class EnnemiScript : MonoBehaviour
     private List<Vector2> _se_oldpos = new List<Vector2>(); //se == shoot emulate
 
     private GameObject _target;
+    private Collider2D _shootingwall;
 
     private int _se_iteration = 200;
     private void Awake()
@@ -87,6 +91,8 @@ public class EnnemiScript : MonoBehaviour
         {
             _state = STATE.Idle;
             _walk_oposite_dir = false;
+            HoleLeftBuffer = 0;
+            HoleRightBuffer = 0;
             return; 
         }
 
@@ -99,10 +105,25 @@ public class EnnemiScript : MonoBehaviour
             case STATE.TestingShooting:
                 alltestshooting(60);
                 break;
-            case STATE.Moving:
-                if (gamemanager.GetComponent<GameScript>().timer <= 3)
+            case STATE.SHOOTWALL:
+                _shootwall_timer += 1 * Time.fixedDeltaTime;
+                if (_shootwall_timer >= _shootwall_max_timer)
                 {
-                    StartTestShooting();
+                    allwallshooting(60);
+                }
+                if (_target.transform.position.x - transform.transform.position.x > 0)
+                {
+                    WalkLeft();
+                }
+                else
+                {
+                    WalkRight();
+                }
+                break;
+            case STATE.Moving:
+                if (gamemanager.GetComponent<GameScript>().timer <= 1.5)
+                {
+                    _state = STATE.Escaping;
                     break;
                 }
                 WaitWalkingStop();
@@ -110,9 +131,11 @@ public class EnnemiScript : MonoBehaviour
                 {
                     if (Mathf.Abs(_old_jumpx - transform.position.x) < 0.3f)
                     {
+                        gethighwall();
+                        _shootwall_timer = 0;
                         _old_jumpx = 0;
                         _jumped = false;
-                        _walk_oposite_dir = !_walk_oposite_dir;
+                        //_walk_oposite_dir = !_walk_oposite_dir;
                     }
                 }
                 if (_target.transform.position.x - transform.transform.position.x > 0)
@@ -137,6 +160,92 @@ public class EnnemiScript : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    private void gethighwall()
+    {
+        Vector2 testwallpos = (Vector2)transform.position;
+        Collider2D wallcollider = null;
+        int side = -1;
+        if (_target.transform.position.x - transform.transform.position.x > 0) side = 1;
+        for (int i = 0; i < 50; i++)
+        {
+            var raycast = Physics2D.Raycast(testwallpos, Vector2.right * side, 3);
+            if (raycast.collider == null && wallcollider != null)
+            {
+                _state = STATE.SHOOTWALL;
+                _shootingwall = wallcollider;
+                break;
+            }
+            else
+            {
+                wallcollider = raycast.collider;
+                testwallpos += new Vector2(0, 1);
+            }
+        }
+    }
+
+    private void allwallshooting(int coroutine_num)
+    {
+        float base_offset_angle = 180 / coroutine_num;
+        _angle = (float)Math.PI / 2f;
+        _shoot_force += 1;
+        if (_shoot_force >= _maxforce)
+        {
+            _shoot_force = 5;
+        }
+
+        for (int i = 0; i <= coroutine_num; i++)
+        {
+            float offset_angle = 0;
+            if (_shootingwall.transform.position.x - transform.transform.position.x > 0)
+            {
+                offset_angle = base_offset_angle * i;
+            }
+            else offset_angle = base_offset_angle * i + 180;
+            StartCoroutine(WallShooting(_angle - (offset_angle * Mathf.Deg2Rad)));
+            if (_state != STATE.SHOOTWALL) break;
+        }
+    }
+
+    IEnumerator WallShooting(float angle_test)
+    {
+        _se_oldpos.Clear();
+        Vector2 _se_c_position;
+        Vector2 _se_c_velocity;
+        _se_c_position = RB.position;
+        Vector2 _shoot_vector = new Vector2((float)Math.Cos(angle_test), (float)Math.Sin(angle_test));
+        _shoot_vector *= _shoot_force;
+        _se_c_velocity = _shoot_vector;
+
+        for (int i = 0; i < _se_iteration; i++)
+        {
+            _se_oldpos.Add(_se_c_position);
+            DrawDebugShooting();
+
+            _se_c_position += _se_c_velocity * Time.fixedDeltaTime;
+            _se_c_velocity += new Vector2(0, -9.80665f) * Time.fixedDeltaTime;
+            _se_c_velocity += gamemanager.GetComponent<GameScript>().wind * Time.fixedDeltaTime;
+
+            var _raycast = Physics2D.CircleCast(_se_c_position, 0.5f, Vector2.zero, 0.5f);
+
+            if (_raycast.collider != null)
+            {
+                if (_raycast.collider.GetComponent<BoxCollider2D>() != null && _raycast.transform.tag == "Map" && _raycast.collider.GetComponent<BoxCollider2D>() != _shootingwall)
+                {
+                    break;
+                }
+            }
+
+            if (_shootingwall.OverlapPoint(_se_c_position))
+            {
+                _shoot_vector = new Vector2((float)Math.Cos(angle_test), (float)Math.Sin(angle_test));
+                _shoot_vector *= _shoot_force;
+                Shoot(_shoot_vector);
+                break;
+            }
+        }
+        yield return null;
     }
 
     private void alltestshooting(int coroutine_num)
