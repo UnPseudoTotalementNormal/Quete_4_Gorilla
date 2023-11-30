@@ -34,7 +34,7 @@ public class EnnemiScript : MonoBehaviour
     private float _walking_timer = 0f;
     private float _walking_max_timer = 1f;
     private float _shootwall_timer = 0f;
-    private float _shootwall_max_timer = 2f;
+    private float _shootwall_max_timer = 0.5f;
 
     [SerializeField] private GameObject balls;
 
@@ -47,7 +47,7 @@ public class EnnemiScript : MonoBehaviour
     private STATE _state = STATE.Idle;
 
     private float _shoot_timer = 0;
-    private float _shoot_max_timer = 0.5f; //in seconds
+    private float _shoot_max_timer = 1f; //in seconds
 
     private float _angle = 0;
     private float _shoot_force;
@@ -91,6 +91,7 @@ public class EnnemiScript : MonoBehaviour
         {
             _state = STATE.Idle;
             _walk_oposite_dir = false;
+            _jumped = false;
             HoleLeftBuffer = 0;
             HoleRightBuffer = 0;
             return; 
@@ -106,9 +107,10 @@ public class EnnemiScript : MonoBehaviour
                 alltestshooting(60);
                 break;
             case STATE.SHOOTWALL:
-                _shootwall_timer += 1 * Time.fixedDeltaTime;
+                _shootwall_timer += 1 * Time.deltaTime;
                 if (_shootwall_timer >= _shootwall_max_timer)
                 {
+
                     allwallshooting(60);
                 }
                 if (_target.transform.position.x - transform.transform.position.x > 0)
@@ -332,9 +334,9 @@ public class EnnemiScript : MonoBehaviour
             _old_jumpx = transform.position.x;
             _jumped = true;
             RB.velocity = Vector2.up * 14;
-            if (_walking_timer > _walking_max_timer/2) 
+            if (_walking_timer > _walking_max_timer/2.5f) 
             {
-                _walking_timer = _walking_max_timer/2;
+                _walking_timer = _walking_max_timer/2.5f;
             }
         }
     }

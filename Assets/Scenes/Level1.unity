@@ -1959,7 +1959,7 @@ MonoBehaviour:
   height: 10
   minHeight: 3
   maxHeight: -10
-  maxVariation: 4
+  maxVariation: 5
   repeatNum: 3
   Dirt: {fileID: 8743190320847092179, guid: 75f1c531f199fad4dbf836526bcab978, type: 3}
   Grass: {fileID: 5939134577841790222, guid: 0d0d2782de2c00741a8429104b1bb158, type: 3}
