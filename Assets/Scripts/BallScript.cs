@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class BallScript : MonoBehaviour
 
     private Rigidbody2D RB;
     private Vector2 _awakevel;
+    private bool already_exploded = false;
 
     private int min_height = -30;
     private void Awake()
@@ -53,6 +55,11 @@ public class BallScript : MonoBehaviour
             newpart.GetComponent<ParticleSystem>().Play();
             Destroy(newpart, 10);
             ExplosionParticles = null;
+        }
+        if (!already_exploded)
+        {
+            already_exploded = true;
+            Camera.main.GetComponent<Shake>().start = true;
         }
         Destroy(this.gameObject);
     }
