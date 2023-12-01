@@ -10,6 +10,7 @@ public class EnnemiScript : MonoBehaviour
 {
     private GameObject gamemanager;
     private bool _myturn = false;
+    public bool played_this_turn = false;
     private enum STATE
     {
         Idle,
@@ -96,6 +97,7 @@ public class EnnemiScript : MonoBehaviour
             HoleRightBuffer = 0;
             return; 
         }
+        played_this_turn = true;
 
         switch (_state)
         {

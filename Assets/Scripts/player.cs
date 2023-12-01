@@ -15,6 +15,7 @@ public class player : MonoBehaviour
 {
     private GameObject gamemanager;
     private bool _myturn = false;
+    public bool played_this_turn = false;
     private enum STATE
     {
         Normal,
@@ -81,6 +82,7 @@ public class player : MonoBehaviour
             transform.Find("Canvas").Find("ChargingBar").gameObject.SetActive(false);
             return; 
         }
+        played_this_turn = true;
 
         switch (_state)
         {
@@ -171,6 +173,7 @@ public class player : MonoBehaviour
         LineRenderer line =  _se_line.GetComponent<LineRenderer>();
         line.positionCount = 0;
         int pointnum = Mathf.Clamp(30, 0, _se_oldpos.Count() - 1);
+        if (pointnum <= 0) return;
         line.positionCount = pointnum;
         for (int i = 0; i < pointnum; i++)
         {

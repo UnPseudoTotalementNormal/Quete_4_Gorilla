@@ -13,6 +13,9 @@ public class GameScript : MonoBehaviour
     [SerializeField] private GameObject MONKE;
     [SerializeField] private GameObject BLOON;
 
+    private Transform monkes_folder;
+    private Transform bloons_folder;
+
     private GameObject HUD;
 
     public float timer;
@@ -39,6 +42,8 @@ public class GameScript : MonoBehaviour
     int map_y;
     private void Start()
     {
+        monkes_folder = transform.Find("Monkes");
+        bloons_folder = transform.Find("Bloons");
         map_min = GameObject.Find("Map2").GetComponent<Map2script>().startX;
         map_max = GameObject.Find("Map2").GetComponent<Map2script>().width - 1;
         map_y = GameObject.Find("Map2").GetComponent<Map2script>().minHeight;
@@ -65,7 +70,7 @@ public class GameScript : MonoBehaviour
                     i++;
                 }
                 newname = "Monke" + i.ToString();
-                GameObject newmonke = Instantiate(MONKE, pos, Quaternion.identity);
+                GameObject newmonke = Instantiate(MONKE, pos, Quaternion.identity, monkes_folder);
                 newmonke.name = newname;
                 newmonke.GetComponent<HealthComponent>().health = hp;
                 break;
@@ -75,7 +80,7 @@ public class GameScript : MonoBehaviour
                     i++;
                 }
                 newname = "Bloon" + i.ToString();
-                GameObject newbloon = Instantiate(BLOON, pos, Quaternion.identity);
+                GameObject newbloon = Instantiate(BLOON, pos, Quaternion.identity, bloons_folder);
                 newbloon.name = newname;
                 newbloon.GetComponent<HealthComponent>().health = hp;
                 break;
@@ -170,34 +175,7 @@ public class GameScript : MonoBehaviour
         }
     }
 
-    private void NextWave()
-    {
-        wave += 1;
-        switch (wave)
-        {
-            case 2:
-                SpawnEntity("Bloon", Vector2.zero, 1);
-                SpawnEntity("Bloon", Vector2.zero, 1);
-                break;
-            case 3:
-                SpawnEntity("Bloon", Vector2.zero, 2);
-                break;
-            case 4:
-                SpawnEntity("Bloon", Vector2.zero, 1);
-                SpawnEntity("Bloon", Vector2.zero, 1);
-                break;
-            case 5:
-                SpawnEntity("Bloon", Vector2.zero, 3);
-                break;
-            case 6:
-                SpawnEntity("Bloon", Vector2.zero, 1);
-                SpawnEntity("Bloon", Vector2.zero, 2);
-                break;
-            default:
-                SpawnEntity("Bloon", Vector2.zero, 1);
-                break;
-        }
-    }
+    
     IEnumerator CodeAfterDelay(Action nextfunction, float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -206,6 +184,7 @@ public class GameScript : MonoBehaviour
 
     private void ChangeTeam()
     {
+        setmembersready();
         following_object = null;
         following_object2 = null;
         Memberturn = null;
@@ -239,15 +218,79 @@ public class GameScript : MonoBehaviour
         }
     }
 
+    private void setmembersready()
+    {
+        for (int i = 0; i < monkes_folder.childCount; i++)
+        {
+            monkes_folder.GetChild(i).GetComponent<player>().played_this_turn = false;
+        }
+
+        for (int i = 0; i < bloons_folder.childCount; i++)
+        {
+            bloons_folder.GetChild(i).GetComponent<EnnemiScript>().played_this_turn = false;
+        }
+    }
+
     private GameObject GetMember(bool set = true)
     {
+        GameObject searchmember = null;
+        if (teamturn == "Monke")
+        {
+            for (int i = 0; i < monkes_folder.childCount; i++)
+            {
+                if (monkes_folder.GetChild(i).GetComponent<player>().played_this_turn == false)
+                {
+                    searchmember = monkes_folder.GetChild(i).gameObject;
+                }
+            }
+        }
+        else if (teamturn == "Bloon")
+        {
+            for (int i = 0; i < bloons_folder.childCount; i++)
+            {
+                if (bloons_folder.GetChild(i).GetComponent<EnnemiScript>().played_this_turn == false)
+                {
+                    searchmember = bloons_folder.GetChild(i).gameObject;
+                }
+            }
+        }
+
         if (set) 
         {
-            return Memberturn = GameObject.Find(teamturn + numturn.ToString());
+            return Memberturn = searchmember;
         }
         else
         {
-            return GameObject.Find(teamturn + numturn.ToString());
+            return searchmember;
+        }
+    }
+
+    private void NextWave()
+    {
+        wave += 1;
+        switch (wave)
+        {
+            case 2:
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                break;
+            case 3:
+                SpawnEntity("Bloon", Vector2.zero, 2);
+                break;
+            case 4:
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                break;
+            case 5:
+                SpawnEntity("Bloon", Vector2.zero, 3);
+                break;
+            case 6:
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                SpawnEntity("Bloon", Vector2.zero, 2);
+                break;
+            default:
+                SpawnEntity("Bloon", Vector2.zero, 3);
+                break;
         }
     }
 
