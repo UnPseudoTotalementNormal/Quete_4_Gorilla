@@ -105,6 +105,8 @@ public class GameScript : MonoBehaviour
     {
         TextMeshProUGUI hudturn = HUD.transform.Find("TextTurn").GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI hudtimer = HUD.transform.Find("TextTimer").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI hudwave = HUD.transform.Find("TextWave").GetComponent<TextMeshProUGUI>();
+        hudwave.text = "Wave: " + wave.ToString();
         if (Memberturn != null)
         {
             hudturn.text = teamturn + " " + numturn.ToString() + " turn";
