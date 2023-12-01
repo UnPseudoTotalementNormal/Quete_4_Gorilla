@@ -140,6 +140,7 @@ public class GameScript : MonoBehaviour
     {
         Time.timeScale = 0f;
         inshop = true;
+        shopmenu.GetComponent<ShopScript>().OpenShop();
     }
 
     private void RestartTimer()
