@@ -194,6 +194,7 @@ GameObject:
   - component: {fileID: 6209772932474552036}
   - component: {fileID: 7578256182670650763}
   - component: {fileID: 8265985669628469895}
+  - component: {fileID: 1568658291661675393}
   - component: {fileID: 6290108479528815234}
   - component: {fileID: 3998322633149370802}
   m_Layer: 7
@@ -288,6 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fb44d212d4274c47a2d2503ae4a278e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  played_this_turn: 0
   balls: {fileID: 5814152976089428540, guid: 47d9a8e804d2b754488f38a0297a8cf2, type: 3}
   _maxforce: 15
   _chargingspeed: 10
@@ -305,6 +307,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 3
   damage_particle: {fileID: 7941329392105747962, guid: 73a3537508ba20e43ae331ed68f71c1b, type: 3}
+--- !u!114 &1568658291661675393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3502336445795653701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad6a9d90611622245a6d206240732edb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amount: 1
 --- !u!70 &6290108479528815234
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

@@ -10199,6 +10199,7 @@ GameObject:
   - component: {fileID: 3357878722401216095}
   - component: {fileID: 8214512514507957366}
   - component: {fileID: 7846272813088829328}
+  - component: {fileID: 8317555305412748487}
   - component: {fileID: 6195343939647806048}
   - component: {fileID: 5799763343205669368}
   - component: {fileID: 4225792099726481960}
@@ -10291,6 +10292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 290b0ef3d3fa04e47b0a645459c73b22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  played_this_turn: 0
   _maxforce: 15
   _chargingspeed: 10
   balls: {fileID: 5814152976089428540, guid: 8e9857bcdafa8c346a99e6c36493ba16, type: 3}
@@ -10315,6 +10317,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 3
   damage_particle: {fileID: 7941329392105747962, guid: 27df72c0a895b2946b69f106f7977ad8, type: 3}
+--- !u!114 &8317555305412748487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6267210129791254218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad6a9d90611622245a6d206240732edb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amount: 0
 --- !u!114 &6195343939647806048
 MonoBehaviour:
   m_ObjectHideFlags: 0

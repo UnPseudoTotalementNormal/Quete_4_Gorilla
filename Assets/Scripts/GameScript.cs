@@ -40,6 +40,8 @@ public class GameScript : MonoBehaviour
     int map_min;
     int map_max;
     int map_y;
+
+    public int monke_money = 0;
     private void Start()
     {
         monkes_folder = transform.Find("Monkes");
@@ -106,11 +108,13 @@ public class GameScript : MonoBehaviour
         TextMeshProUGUI hudturn = HUD.transform.Find("TextTurn").GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI hudtimer = HUD.transform.Find("TextTimer").GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI hudwave = HUD.transform.Find("TextWave").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI hudmoney = HUD.transform.Find("TextMoney").GetComponent<TextMeshProUGUI>();
         hudwave.text = "Wave: " + wave.ToString();
         if (Memberturn != null)
         {
             hudturn.text = teamturn + " " + numturn.ToString() + " turn";
             hudtimer.text = ((int)timer).ToString();
+            hudmoney.text = "$" + monke_money.ToString();
         }
         else
         {
