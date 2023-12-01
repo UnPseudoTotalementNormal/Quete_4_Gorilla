@@ -41,6 +41,9 @@ public class GameScript : MonoBehaviour
     int map_max;
     int map_y;
 
+    private Transform shopmenu;
+
+    public bool inshop = false;
     public int monke_money = 0;
     private void Start()
     {
@@ -50,6 +53,7 @@ public class GameScript : MonoBehaviour
         map_max = GameObject.Find("Map2").GetComponent<Map2script>().width - 1;
         map_y = GameObject.Find("Map2").GetComponent<Map2script>().minHeight;
         HUD = GameObject.Find("HUD");
+        shopmenu = HUD.transform.Find("Shop");
         cam = Camera.main;
         camZ = cam.transform.position.z;
         RandomizeWind();
@@ -122,6 +126,20 @@ public class GameScript : MonoBehaviour
             hudtimer.text = " ";
         }
         
+        if (inshop)
+        {
+            shopmenu.GetComponent<RectTransform>().localPosition = new Vector3(Mathf.Lerp(shopmenu.GetComponent<RectTransform>().localPosition.x, 0, 1f * Time.fixedDeltaTime), 0, 0);
+        }
+        else
+        {
+            shopmenu.GetComponent<RectTransform>().localPosition = new Vector3(Mathf.Lerp(shopmenu.GetComponent<RectTransform>().localPosition.x, 1920, 1f * Time.fixedDeltaTime), 0, 0);
+        }
+    }
+
+    private void OpenShop()
+    {
+        Time.timeScale = 0f;
+        inshop = true;
     }
 
     private void RestartTimer()
@@ -215,6 +233,7 @@ public class GameScript : MonoBehaviour
                     SceneManager.LoadScene("MainMenu");
                     break;
                 case "Bloon":
+                    OpenShop();
                     NextWave();
                     FollowThis(GetMember(false));
                     StartCoroutine(CodeAfterDelay(ChangeTeam, 2));
@@ -300,9 +319,13 @@ public class GameScript : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         UpdateHUD();
+    }
+
+    private void FixedUpdate()
+    {
         if (following_object !=  null)
         {
             if (following_object2 != null)
