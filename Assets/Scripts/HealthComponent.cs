@@ -32,4 +32,9 @@ public class HealthComponent : MonoBehaviour
             money_source.GiveMoney();
         }
     }
+
+    public void GiveHp(int hp)
+    {
+        health += hp;
+    }
 }
