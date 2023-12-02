@@ -118,7 +118,7 @@ public class GameScript : MonoBehaviour
         hudwave.text = "Wave: " + wave.ToString();
         if (Memberturn != null)
         {
-            hudturn.text = teamturn + " " + numturn.ToString() + " turn";
+            hudturn.text = Memberturn.name + " turn";
             hudtimer.text = ((int)timer).ToString();
             hudmoney.text = "$" + monke_money.ToString();
         }
