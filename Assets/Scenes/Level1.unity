@@ -3345,7 +3345,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Throw 3 dart at the same time
+  m_text: uPGRADE DESCRIPTION
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6176e3af12fc1c240b1f4f98348a90b1, type: 2}
   m_sharedMaterial: {fileID: -1688768574711338114, guid: 6176e3af12fc1c240b1f4f98348a90b1, type: 2}

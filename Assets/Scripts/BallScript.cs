@@ -72,6 +72,10 @@ public class BallScript : MonoBehaviour
         {
             already_exploded = true;
             Camera.main.GetComponent<Shake>().start = true;
+
+            GameObject newobject = new GameObject();
+            newobject.AddComponent<AudioPlayer>();
+            newobject.GetComponent<AudioPlayer>().PlayAudio("Audio/Explosion", 0.3f);
         }
         Destroy(this.gameObject);
     }

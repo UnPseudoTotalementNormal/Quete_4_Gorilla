@@ -13,10 +13,11 @@ public class AudioPlayer : MonoBehaviour
         }
     }
 
-    public void PlayAudio(string Path)
+    public void PlayAudio(string Path, float volume = 1)
     {
         this.gameObject.AddComponent<AudioSource>();
         AudioSource source = this.gameObject.GetComponent<AudioSource>();
+        source.volume = volume;
         source.clip = Resources.Load<AudioClip>(Path);
         source.Play();
         played = true;
