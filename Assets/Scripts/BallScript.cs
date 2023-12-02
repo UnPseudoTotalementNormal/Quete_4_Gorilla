@@ -16,6 +16,9 @@ public class BallScript : MonoBehaviour
     private bool already_exploded = false;
 
     private int min_height = -30;
+
+    private float explosion_radius = 0;
+
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
@@ -36,6 +39,12 @@ public class BallScript : MonoBehaviour
         RB.velocity = _awakevel;
     }
 
+    public void SetRadius(float radius)
+    {
+        print(radius);
+        explosion_radius = radius;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (ExplosionRadius != null)
@@ -43,6 +52,10 @@ public class BallScript : MonoBehaviour
             ExplosionRadius.GetComponent<Rigidbody2D>().excludeLayers = RB.excludeLayers;
             GameObject newexplosion = null;
             newexplosion = Instantiate(ExplosionRadius);
+            if (explosion_radius != 0)
+            {
+                newexplosion.GetComponent<CircleCollider2D>().radius = explosion_radius;
+            }
             newexplosion.transform.position = transform.position;
             ExplosionRadius = null;
         }

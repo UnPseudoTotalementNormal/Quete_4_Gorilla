@@ -236,6 +236,7 @@ public class GameScript : MonoBehaviour
                 case "Bloon":
                     OpenShop();
                     NextWave();
+                    RefillMagicShields();
                     FollowThis(GetMember(false));
                     StartCoroutine(CodeAfterDelay(ChangeTeam, 2));
                     break;
@@ -317,6 +318,14 @@ public class GameScript : MonoBehaviour
             default:
                 SpawnEntity("Bloon", Vector2.zero, 3);
                 break;
+        }
+    }
+
+    private void RefillMagicShields()
+    {
+        for (int i = 0; i < monkes_folder.childCount; ++i)
+        {
+            monkes_folder.GetChild(i).GetComponent<HealthComponent>().GiveMagicShield(1);
         }
     }
 

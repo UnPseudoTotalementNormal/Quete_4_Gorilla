@@ -67,11 +67,29 @@ public class UpgradeScript : MonoBehaviour
             case "heal":
                 Monke_health.GiveHp(1);
                 break;
+            case "speedboost":
+                Monke_script.walking_speed *= 1.20f;
+                break;
+            case "higher_jump":
+                Monke_script.jump_force *= 1.15f;
+                break;
+            case "bigger_explosion_radius":
+                Monke_script.explosion_radius += 0.5f;
+                break;
+            case "shield":
+                Monke_health.magic_shield_max += 1;
+                break;
+            case "triple_shot":
+                Monke_script.triple_shot = true;
+                break;
+            case "multi_shot":
+                Monke_script.multi_shot += 1;
+                break;
         }
     }
     private void RandomizeUpgrade()
     {
-        int randomupgrade = Random.Range(0, 4);
+        int randomupgrade = Random.Range(0, 6);
         switch (randomupgrade)
         {
             case 0:
@@ -79,15 +97,13 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeName.text = "BANANA :)";
                 UpgradeDescription.text = "Refill 1 hp\nhmmm banana";
                 cost = 2;
-                BuyButtonText.text = "$" + cost.ToString();
                 accumulable = true;
                 break;
             case 1:
                 upgrade_id = "shield";
                 UpgradeName.text = "MAGIC SHIELD";
-                UpgradeDescription.text = "Resist 1 hit each wave";
-                cost = 6;
-                BuyButtonText.text = "$" + cost.ToString();
+                UpgradeDescription.text = "Resist +1 hit each wave";
+                cost = 4;
                 accumulable = false;
                 break;
             case 2:
@@ -95,34 +111,38 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeName.text = "DART EXPERT";
                 UpgradeDescription.text = "Throw 3 dart at the same time";
                 cost = 3;
-                BuyButtonText.text = "$" + cost.ToString();
                 accumulable = false;
                 break;
             case 3:
                 upgrade_id = "speedboost";
                 UpgradeName.text = "SPEEDRUNING MONKE";
-                UpgradeDescription.text = "10% moving speed boost";
+                UpgradeDescription.text = "+20% moving speed boost";
                 cost = 1;
-                BuyButtonText.text = "$" + cost.ToString();
                 accumulable = true;
                 break;
             case 4:
                 upgrade_id = "multi_shot";
                 UpgradeName.text = "DART MANIAC";
-                UpgradeDescription.text = "Shoot 2 times per turn";
+                UpgradeDescription.text = "Shoot 1 more time per turn";
                 cost = 6;
-                BuyButtonText.text = "$" + cost.ToString();
                 accumulable = true;
                 break;
             case 5:
                 upgrade_id = "higher_jump";
                 UpgradeName.text = "PARKOUR TRAINING";
-                UpgradeDescription.text = "Jump 10% higher";
+                UpgradeDescription.text = "+15% jump height";
                 cost = 1;
-                BuyButtonText.text = "$" + cost.ToString();
+                accumulable = true;
+                break;
+            case 6:
+                upgrade_id = "bigger_explosion_radius";
+                UpgradeName.text = "BIGGER WEAPONS";
+                UpgradeDescription.text = "explosion radius is 1 bloc bigger";
+                cost = 2;
                 accumulable = true;
                 break;
         }
+        BuyButtonText.text = "$" + cost.ToString();
     }
 
     private Transform GetSelectedMonke() //get monke selected on the ChooseMonke Dropdown

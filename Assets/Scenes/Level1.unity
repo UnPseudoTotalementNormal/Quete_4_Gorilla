@@ -599,8 +599,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00012207031, y: 169}
-  m_SizeDelta: {x: -360, y: -350}
+  m_AnchoredPosition: {x: 0.0026855469, y: 170.87}
+  m_SizeDelta: {x: -378.32, y: -405.96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &102791380
 MonoBehaviour:
@@ -649,8 +649,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -5499,8 +5499,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00012207031, y: 169}
-  m_SizeDelta: {x: -360, y: -350}
+  m_AnchoredPosition: {x: 0.002532959, y: 171.45}
+  m_SizeDelta: {x: -378.32, y: -406.27}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1844904455
 MonoBehaviour:
@@ -5549,8 +5549,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -5895,8 +5895,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00012207031, y: 169}
-  m_SizeDelta: {x: -360, y: -350}
+  m_AnchoredPosition: {x: 0.0026855469, y: 174.67}
+  m_SizeDelta: {x: -378.32, y: -408.03}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1883325411
 MonoBehaviour:
@@ -5945,8 +5945,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6551,6 +6551,10 @@ PrefabInstance:
     - target: {fileID: 6267210129791254218, guid: 6a88187882b6d094c80a146e8226af5f, type: 3}
       propertyPath: m_Name
       value: Monke1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8214512514507957366, guid: 6a88187882b6d094c80a146e8226af5f, type: 3}
+      propertyPath: explosion_radius
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8617416881724809935, guid: 6a88187882b6d094c80a146e8226af5f, type: 3}
       propertyPath: m_LocalPosition.x

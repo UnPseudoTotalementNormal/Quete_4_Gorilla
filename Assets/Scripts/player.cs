@@ -45,6 +45,13 @@ public class player : MonoBehaviour
     private Vector2 _se_position;
     private Vector2 _se_velocity;
 
+    public float walking_speed = 5;
+    public float jump_force = 14;
+    public float explosion_radius = 1;
+    public bool triple_shot = false;
+    public int multi_shot = 1;
+    private int shot_this_turn = 0;
+
     [SerializeField] private GameObject _se_line;
     void Start()
     {
@@ -104,7 +111,6 @@ public class player : MonoBehaviour
                 transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, ((_maxforce - _currentforce) / (_maxforce - 0)) * 64, 0);
                 if (_currentforce >= _maxforce)
                 {
-                    _state = STATE.Escaping;
                     ShootFunction();
                 }
                 break;
@@ -127,16 +133,28 @@ public class player : MonoBehaviour
 
     private void WalkLeft()
     {
-        RB.velocity = new Vector2(-5f, RB.velocity.y);
+        RB.velocity = new Vector2(-walking_speed, RB.velocity.y);
         _monkesprite.GetComponent<SpriteRenderer>().flipX = true;
         _sprite_angle = 30;
     }
 
     private void WalkRight()
     {
-        RB.velocity = new Vector2(5f, RB.velocity.y);
+        RB.velocity = new Vector2(walking_speed, RB.velocity.y);
         _monkesprite.GetComponent<SpriteRenderer>().flipX = false;
         _sprite_angle = -30;
+    }
+    public void JumpInput(InputAction.CallbackContext ctx)
+    {
+        if (!_myturn) { return; }
+        if (_state == STATE.Normal || _state == STATE.Escaping)
+        {
+            if (ctx.phase == InputActionPhase.Started && OnGround)
+            {
+                _monkesprite.Find("FirePart").Find("Burst").GetComponent<ParticleSystem>().Play();
+                RB.velocity += Vector2.up * jump_force;
+            }
+        }
     }
 
     private void TestShooting()
@@ -187,18 +205,6 @@ public class player : MonoBehaviour
         OnGround = touched;
     }
 
-    public void JumpInput(InputAction.CallbackContext ctx)
-    {
-        if (!_myturn) { return; }
-        if (_state == STATE.Normal || _state == STATE.Escaping)
-        {
-            if (ctx.phase == InputActionPhase.Started && OnGround)
-            {
-                _monkesprite.Find("FirePart").Find("Burst").GetComponent<ParticleSystem>().Play();
-                RB.velocity += Vector2.up * 14;
-            }
-        }
-    }
     public void ShootInput(InputAction.CallbackContext ctx)
     {
         if (!_myturn) { return; }
@@ -210,7 +216,6 @@ public class player : MonoBehaviour
         }
         if (ctx.phase == InputActionPhase.Canceled && _state == STATE.Charging)
         {
-            _state = STATE.Escaping;
             ShootFunction();
         }
     }
@@ -234,18 +239,49 @@ public class player : MonoBehaviour
         }
     }
 
-    private void ShootFunction()
+    private void ShootFunction(bool turn_actions = true)
     {
-        gamemanager.GetComponent<GameScript>().ActionTimer();
-
         Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
         Vector2 shootvector = _mousepos - Ppos;
+        
         GameObject newball;
         newball = Instantiate(balls, transform.position, transform.rotation);
-
         newball.GetComponent<BallScript>().SetAngle(shootvector.normalized, _currentforce);
-        gamemanager.GetComponent<GameScript>().FollowThis(newball, this.gameObject);
-        //gamemanager.GetComponent<GameScript>().EndTurn(newball, this.gameObject);
+        newball.GetComponent<BallScript>().SetRadius(explosion_radius);
+
+        if (triple_shot)
+        {
+            Vector2 tripleshootvector = new Vector2(Mathf.Cos((_mouseangle + 10) * Mathf.PI / 180), Mathf.Sin((_mouseangle + 10) * Mathf.PI / 180));
+            GameObject newball2;
+            newball2 = Instantiate(balls, transform.position, transform.rotation);
+            newball2.GetComponent<BallScript>().SetAngle(tripleshootvector.normalized, _currentforce);
+            newball2.GetComponent<BallScript>().SetRadius(explosion_radius);
+
+            tripleshootvector = new Vector2(Mathf.Cos((_mouseangle - 10) * Mathf.PI / 180), Mathf.Sin((_mouseangle - 10) * Mathf.PI / 180));
+            GameObject newball3;
+            newball3 = Instantiate(balls, transform.position, transform.rotation);
+            newball3.GetComponent<BallScript>().SetAngle(tripleshootvector.normalized, _currentforce);
+            newball3.GetComponent<BallScript>().SetRadius(explosion_radius);
+        }
+
+        if (turn_actions)
+        {
+            shot_this_turn += 1;
+            if (shot_this_turn >= multi_shot)
+            {
+                _state = STATE.Escaping;
+                gamemanager.GetComponent<GameScript>().ActionTimer();
+                gamemanager.GetComponent<GameScript>().FollowThis(newball, this.gameObject);
+            }
+            else
+            {
+                _state = STATE.Normal;
+            }
+        }
+        else
+        {
+            _state = STATE.Normal;
+        }
     }
 
     public void GetMousePosition(InputAction.CallbackContext ctx)
