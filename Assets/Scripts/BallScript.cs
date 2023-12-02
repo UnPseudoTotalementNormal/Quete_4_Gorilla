@@ -41,7 +41,6 @@ public class BallScript : MonoBehaviour
 
     public void SetRadius(float radius)
     {
-        print(radius);
         explosion_radius = radius;
     }
 

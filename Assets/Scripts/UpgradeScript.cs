@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using TMPro;
-using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -89,7 +88,7 @@ public class UpgradeScript : MonoBehaviour
     }
     private void RandomizeUpgrade()
     {
-        int randomupgrade = Random.Range(0, 6);
+        int randomupgrade = Random.Range(0, 7);
         switch (randomupgrade)
         {
             case 0:
@@ -103,21 +102,21 @@ public class UpgradeScript : MonoBehaviour
                 upgrade_id = "shield";
                 UpgradeName.text = "MAGIC SHIELD";
                 UpgradeDescription.text = "Resist +1 hit each wave";
-                cost = 4;
+                cost = 5;
                 accumulable = false;
                 break;
             case 2:
                 upgrade_id = "triple_shot";
                 UpgradeName.text = "DART EXPERT";
                 UpgradeDescription.text = "Throw 3 dart at the same time";
-                cost = 3;
+                cost = 6;
                 accumulable = false;
                 break;
             case 3:
                 upgrade_id = "speedboost";
                 UpgradeName.text = "SPEEDRUNING MONKE";
                 UpgradeDescription.text = "+20% moving speed boost";
-                cost = 1;
+                cost = 2;
                 accumulable = true;
                 break;
             case 4:
@@ -131,18 +130,36 @@ public class UpgradeScript : MonoBehaviour
                 upgrade_id = "higher_jump";
                 UpgradeName.text = "PARKOUR TRAINING";
                 UpgradeDescription.text = "+15% jump height";
-                cost = 1;
+                cost = 2;
                 accumulable = true;
                 break;
             case 6:
                 upgrade_id = "bigger_explosion_radius";
                 UpgradeName.text = "BIGGER WEAPONS";
-                UpgradeDescription.text = "explosion radius is 1 bloc bigger";
+                UpgradeDescription.text = "explosion radius is 1 meter bigger";
                 cost = 2;
                 accumulable = true;
                 break;
+            case 7:
+                break;
+            case 8:
+                break;
+            case 9:
+                break;
+            case 10:
+                break;
         }
         BuyButtonText.text = "$" + cost.ToString();
+        Sprite newsprite = Resources.Load<Sprite>("Sprites/Upgrades/" + upgrade_id);
+        if (newsprite != null)
+        {
+            UpgradeIcon.sprite = newsprite;
+        }
+        else
+        {
+            UpgradeIcon.sprite = Resources.Load<Sprite>("Sprites/Upgrades/upgrade");
+        }
+        
     }
 
     private Transform GetSelectedMonke() //get monke selected on the ChooseMonke Dropdown

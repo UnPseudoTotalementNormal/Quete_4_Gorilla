@@ -86,6 +86,7 @@ public class player : MonoBehaviour
         {
             _state = STATE.Normal;
             _currentforce = 0;
+            shot_this_turn = 0;
             transform.Find("Canvas").Find("ChargingBar").gameObject.SetActive(false);
             return; 
         }
