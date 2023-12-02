@@ -45,6 +45,7 @@ public class player : MonoBehaviour
     private Vector2 _se_position;
     private Vector2 _se_velocity;
 
+    public Dictionary<String, int> upgrade_list = new Dictionary<String, int>();
     public float walking_speed = 5;
     public float jump_force = 14;
     public float explosion_radius = 1;

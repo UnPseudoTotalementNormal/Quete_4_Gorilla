@@ -223,6 +223,7 @@ public class GameScript : MonoBehaviour
                 break;
             case "Bloon":
                 teamturn = "Monke";
+                Time.timeScale = 1;
                 break;
             default:
                 teamturn = "Monke";

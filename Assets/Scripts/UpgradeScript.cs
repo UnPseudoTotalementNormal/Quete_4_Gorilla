@@ -42,10 +42,42 @@ public class UpgradeScript : MonoBehaviour
     {
         already_purchased = false;
         RandomizeUpgrade();
+        if (!check_acumulation(upgrade_id))
+        {
+            Regen();
+        }
+    }
+
+    private bool check_acumulation(string id)
+    {
+        if (accumulable_max == -1) return true;
+
+        Transform Monke = GetSelectedMonke();
+        player Monke_script = Monke.GetComponent<player>();
+        bool can_get_upgrade = false;
+        switch (id)
+        {
+            default:
+                int curr_acc = 0;
+                Monke_script.upgrade_list.TryGetValue(id, out curr_acc);
+                if (curr_acc < accumulable_max) 
+                {
+                    can_get_upgrade = true;
+                }
+                break;
+            case "camera_unzoom":
+                if (gamemanager.camera_normal_zoom < 24)
+                {
+                    can_get_upgrade = true;
+                }
+                break;
+        }
+        return can_get_upgrade;
     }
     public void buy()
     {
-        if (cost <= gamemanager.monke_money && !already_purchased)
+        bool can_upgrade = check_acumulation(upgrade_id);
+        if (cost <= gamemanager.monke_money && can_upgrade && !already_purchased)
         {
             if (GetUpgrade(upgrade_id))
             {
@@ -97,9 +129,15 @@ public class UpgradeScript : MonoBehaviour
                 Monke_script._chargingspeed += 2;
                 break;
             case "camera_unzoom":
-                gamemanager.camera_normal_zoom += 1;
+                gamemanager.camera_normal_zoom += 2;
                 break;
         }
+
+        int upgrade_acc = 0;
+        Monke_script.upgrade_list.TryGetValue(id, out upgrade_acc);
+        if (upgrade_acc != 0) Monke_script.upgrade_list[id] = upgrade_acc;
+        else Monke_script.upgrade_list.Add(id, upgrade_acc + 1);
+        
         return true;
     }
     private void RandomizeUpgrade()
@@ -112,14 +150,14 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeName.text = "BANANA :)";
                 UpgradeDescription.text = "Refill 1 hp (max 5)\nhmmm banana";
                 cost = 2;
-                accumulable_max = 99999;
+                accumulable_max = -1;
                 break;
             case 1:
                 upgrade_id = "shield";
                 UpgradeName.text = "MAGIC SHIELD";
                 UpgradeDescription.text = "Resist +1 hit each wave";
                 cost = 6;
-                accumulable_max = 99999;
+                accumulable_max = -1;
                 break;
             case 2:
                 upgrade_id = "triple_shot";
@@ -127,35 +165,34 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeDescription.text = "Throw 3 dart at the same time";
                 cost = 5;
                 accumulable_max = 1;
-                accumulable_max = 1;
                 break;
             case 3:
                 upgrade_id = "speedboost";
                 UpgradeName.text = "SPEEDRUNING MONKE";
                 UpgradeDescription.text = "+20% moving speed boost";
                 cost = 2;
-                accumulable_max = 99999;
+                accumulable_max = -1;
                 break;
             case 4:
                 upgrade_id = "multi_shot";
                 UpgradeName.text = "DART MANIAC";
                 UpgradeDescription.text = "Shoot 1 more time per turn";
                 cost = 8;
-                accumulable_max = 99999;
+                accumulable_max = -1;
                 break;
             case 5:
                 upgrade_id = "higher_jump";
                 UpgradeName.text = "JETPACK UPGRADE";
                 UpgradeDescription.text = "+15% jump height";
                 cost = 2;
-                accumulable_max = 99999;
+                accumulable_max = -1;
                 break;
             case 6:
                 upgrade_id = "bigger_explosion_radius";
                 UpgradeName.text = "BIGGER WEAPONS";
                 UpgradeDescription.text = "Explosion radius is 1 meter bigger";
                 cost = 2;
-                accumulable_max = 99999;
+                accumulable_max = -1;
                 break;
             case 7:
                 upgrade_id = "visual_aiming";
@@ -170,7 +207,7 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeDescription.text = "+1 m/s max projectile throw speed";
                 cost = 1;
                 accumulable = true;
-                accumulable_max = 99999;
+                accumulable_max = -1;
                 break;
             case 9:
                 upgrade_id = "charge_speed_boost";
@@ -178,7 +215,7 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeDescription.text = "Charge your throw force faster (+2m/s)";
                 cost = 1;
                 accumulable = true;
-                accumulable_max = 99999;
+                accumulable_max = -1;
                 break;
             case 10:
                 upgrade_id = "camera_unzoom";
@@ -186,7 +223,7 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeDescription.text = "Camera unzoom a little bit";
                 cost = 2;
                 accumulable = true;
-                accumulable_max = 15;
+                accumulable_max = 7;
                 break;
         }
         BuyButtonText.text = "$" + cost.ToString();
