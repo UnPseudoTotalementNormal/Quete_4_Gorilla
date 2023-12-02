@@ -45,6 +45,8 @@ public class GameScript : MonoBehaviour
 
     public bool inshop = false;
     public int monke_money = 0;
+
+    public int camera_normal_zoom = 9;
     private void Start()
     {
         monkes_folder = transform.Find("Monkes");
@@ -132,7 +134,7 @@ public class GameScript : MonoBehaviour
         }
         else
         {
-            shopmenu.GetComponent<RectTransform>().localPosition = new Vector3(Mathf.Lerp(shopmenu.GetComponent<RectTransform>().localPosition.x, 1920, 1f * Time.fixedDeltaTime), 0, 0);
+            shopmenu.GetComponent<RectTransform>().localPosition = new Vector3(Mathf.Lerp(shopmenu.GetComponent<RectTransform>().localPosition.x, 215 * cam.orthographicSize, 1f * Time.fixedDeltaTime), 0, 0);
         }
     }
 
@@ -391,7 +393,7 @@ public class GameScript : MonoBehaviour
         {
             cam.transform.position = Vector3.Lerp(cam.transform.position, following.transform.position, 4f * Time.fixedDeltaTime);
             cam.transform.position += new Vector3(0, 0, -cam.transform.position.z + camZ);
-            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, 9, 5f * Time.fixedDeltaTime);
+            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, camera_normal_zoom, 5f * Time.fixedDeltaTime);
         }
         else
         {
@@ -400,6 +402,6 @@ public class GameScript : MonoBehaviour
             cam.transform.position = (following.transform.position + following2.transform.position) / 2;
             cam.transform.position += new Vector3(0, 0, -cam.transform.position.z + camZ);
         }
-        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, 9, 14);
+        cam.orthographicSize = Mathf.Max(cam.orthographicSize, camera_normal_zoom);
     }
 }
