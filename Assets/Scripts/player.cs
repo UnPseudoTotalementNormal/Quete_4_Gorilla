@@ -32,8 +32,8 @@ public class player : MonoBehaviour
     private float _mouseangle;
 
     private float _currentforce = 0;
-    [SerializeField] private float _maxforce = 15;
-    [SerializeField] private float _chargingspeed = 10; //per sec
+    [SerializeField] public float _maxforce = 15;
+    [SerializeField] public float _chargingspeed = 10; //per sec
 
     [SerializeField] private GameObject balls;
     [SerializeField] private InputActionReference Jump, Left, Right, Shoot, Aim, MousePos;
@@ -50,6 +50,8 @@ public class player : MonoBehaviour
     public float explosion_radius = 1;
     public bool triple_shot = false;
     public int multi_shot = 1;
+    public bool visual_aiming = false;
+
     private int shot_this_turn = 0;
 
     [SerializeField] private GameObject _se_line;
@@ -106,8 +108,11 @@ public class player : MonoBehaviour
                 }
                 break;
             case STATE.Charging:
-                _se_line.SetActive(true);
-                TestShooting();
+                if (visual_aiming)
+                {
+                    _se_line.SetActive(true);
+                    TestShooting();
+                }
                 _currentforce += _chargingspeed * Time.fixedDeltaTime;
                 transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, ((_maxforce - _currentforce) / (_maxforce - 0)) * 64, 0);
                 if (_currentforce >= _maxforce)

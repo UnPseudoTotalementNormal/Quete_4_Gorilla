@@ -46,9 +46,11 @@ public class UpgradeScript : MonoBehaviour
     {
         if (cost <= gamemanager.monke_money && !already_purchased)
         {
-            already_purchased = true;
-            gamemanager.monke_money -= cost;
-            GetUpgrade(upgrade_id);
+            if (GetUpgrade(upgrade_id))
+            {
+                gamemanager.monke_money -= cost;
+                already_purchased = true;
+            }
         }
         else
         {
@@ -56,7 +58,7 @@ public class UpgradeScript : MonoBehaviour
         }
     }
 
-    private void GetUpgrade(string id)
+    private bool GetUpgrade(string id)
     {
         Transform Monke = GetSelectedMonke();
         HealthComponent Monke_health = Monke.GetComponent<HealthComponent>();
@@ -84,25 +86,35 @@ public class UpgradeScript : MonoBehaviour
             case "multi_shot":
                 Monke_script.multi_shot += 1;
                 break;
+            case "visual_aiming":
+                Monke_script.visual_aiming = true;
+                break;
+            case "higher_force":
+                Monke_script._maxforce += 1; 
+                break;
+            case "charge_speed_boost":
+                Monke_script._chargingspeed += 2;
+                break;
         }
+        return true;
     }
     private void RandomizeUpgrade()
     {
-        int randomupgrade = Random.Range(0, 7);
+        int randomupgrade = Random.Range(0, 10);
         switch (randomupgrade)
         {
             case 0:
                 upgrade_id = "heal";
                 UpgradeName.text = "BANANA :)";
-                UpgradeDescription.text = "Refill 1 hp\nhmmm banana";
-                cost = 2;
+                UpgradeDescription.text = "Refill 1 hp (max 5)\nhmmm banana";
+                cost = 3;
                 accumulable = true;
                 break;
             case 1:
                 upgrade_id = "shield";
                 UpgradeName.text = "MAGIC SHIELD";
                 UpgradeDescription.text = "Resist +1 hit each wave";
-                cost = 5;
+                cost = 8;
                 accumulable = false;
                 break;
             case 2:
@@ -123,12 +135,12 @@ public class UpgradeScript : MonoBehaviour
                 upgrade_id = "multi_shot";
                 UpgradeName.text = "DART MANIAC";
                 UpgradeDescription.text = "Shoot 1 more time per turn";
-                cost = 6;
+                cost = 8;
                 accumulable = true;
                 break;
             case 5:
                 upgrade_id = "higher_jump";
-                UpgradeName.text = "PARKOUR TRAINING";
+                UpgradeName.text = "JETPACK UPGRADE";
                 UpgradeDescription.text = "+15% jump height";
                 cost = 2;
                 accumulable = true;
@@ -136,15 +148,30 @@ public class UpgradeScript : MonoBehaviour
             case 6:
                 upgrade_id = "bigger_explosion_radius";
                 UpgradeName.text = "BIGGER WEAPONS";
-                UpgradeDescription.text = "explosion radius is 1 meter bigger";
+                UpgradeDescription.text = "Explosion radius is 1 meter bigger";
                 cost = 2;
                 accumulable = true;
                 break;
             case 7:
+                upgrade_id = "visual_aiming";
+                UpgradeName.text = "AIMING TRAINING";
+                UpgradeDescription.text = "Display the start of your projectile trajectory";
+                cost = 3;
+                accumulable = false;
                 break;
             case 8:
+                upgrade_id = "higher_force";
+                UpgradeName.text = "MONKE = STRONG";
+                UpgradeDescription.text = "+1 m/s max projectile throw speed";
+                cost = 2;
+                accumulable = true;
                 break;
             case 9:
+                upgrade_id = "charge_speed_boost";
+                UpgradeName.text = "PREDATOR REFLEX";
+                UpgradeDescription.text = "Charge your throw force faster (+2m/s)";
+                cost = 2;
+                accumulable = true;
                 break;
             case 10:
                 break;
