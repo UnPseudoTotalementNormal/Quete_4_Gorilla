@@ -26,7 +26,7 @@ public class GameScript : MonoBehaviour
     public string teamturn;
     private int numturn = 1;
 
-    private int wave = 1;
+    [SerializeField] private int wave = 1;
 
     private GameObject following_object;
     private GameObject following_object2;
@@ -315,8 +315,29 @@ public class GameScript : MonoBehaviour
                 SpawnEntity("Bloon", Vector2.zero, 1);
                 SpawnEntity("Bloon", Vector2.zero, 2);
                 break;
-            default:
+            case 7:
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                break;
+            case 8:
                 SpawnEntity("Bloon", Vector2.zero, 3);
+                SpawnEntity("Bloon", Vector2.zero, 1);
+                SpawnEntity("Bloon", Vector2.zero, 2);
+                break;
+            default:
+                int redistribute_health = wave;
+                while (redistribute_health > 0)
+                {
+                    int spawn_bloon_health = 0;
+                    while (redistribute_health > 0 && spawn_bloon_health < 5)
+                    {
+                        ++spawn_bloon_health;
+                        --redistribute_health;
+                    }
+                    SpawnEntity("Bloon", Vector2.zero, spawn_bloon_health);
+                }
                 break;
         }
     }

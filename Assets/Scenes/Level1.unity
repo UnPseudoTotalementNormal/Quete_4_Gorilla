@@ -3674,6 +3674,7 @@ MonoBehaviour:
   timerafteraction: 5
   Memberturn: {fileID: 0}
   teamturn: 
+  wave: 1
   wind: {x: 0, y: 0}
   inshop: 0
   monke_money: 0
@@ -6551,6 +6552,10 @@ PrefabInstance:
     - target: {fileID: 6267210129791254218, guid: 6a88187882b6d094c80a146e8226af5f, type: 3}
       propertyPath: m_Name
       value: Monke1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7846272813088829328, guid: 6a88187882b6d094c80a146e8226af5f, type: 3}
+      propertyPath: health
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8214512514507957366, guid: 6a88187882b6d094c80a146e8226af5f, type: 3}
       propertyPath: explosion_radius
@@ -11423,8 +11428,8 @@ SceneRoots:
   - {fileID: 913149316}
   - {fileID: 1011124570}
   - {fileID: 840675232}
-  - {fileID: 1876533104}
   - {fileID: 36489791}
   - {fileID: 313094650}
   - {fileID: 360434554}
   - {fileID: 443789426465374628}
+  - {fileID: 1876533104}

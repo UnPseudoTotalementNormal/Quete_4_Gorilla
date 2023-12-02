@@ -107,21 +107,21 @@ public class UpgradeScript : MonoBehaviour
                 upgrade_id = "heal";
                 UpgradeName.text = "BANANA :)";
                 UpgradeDescription.text = "Refill 1 hp (max 5)\nhmmm banana";
-                cost = 3;
+                cost = 2;
                 accumulable = true;
                 break;
             case 1:
                 upgrade_id = "shield";
                 UpgradeName.text = "MAGIC SHIELD";
                 UpgradeDescription.text = "Resist +1 hit each wave";
-                cost = 8;
+                cost = 6;
                 accumulable = false;
                 break;
             case 2:
                 upgrade_id = "triple_shot";
                 UpgradeName.text = "DART EXPERT";
                 UpgradeDescription.text = "Throw 3 dart at the same time";
-                cost = 6;
+                cost = 5;
                 accumulable = false;
                 break;
             case 3:
