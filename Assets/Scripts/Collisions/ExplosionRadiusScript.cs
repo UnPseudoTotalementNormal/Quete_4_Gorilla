@@ -25,6 +25,7 @@ public class ExplosionRadiusScript : MonoBehaviour
                 PhysicsMaterial2D mapmaterial = new PhysicsMaterial2D();
                 mapmaterial.bounciness = .5f;
                 collision.transform.localScale *= 0.9f;
+                collision.GetComponent<BoxCollider2D>().size = new Vector2(0.95f, 0.95f);
                 collision.GetComponent<Rigidbody2D>().sharedMaterial = mapmaterial;
             }
             Rigidbody2D maprb = collision.GetComponent<Rigidbody2D>();
