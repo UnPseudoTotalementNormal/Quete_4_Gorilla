@@ -142,7 +142,7 @@ public class UpgradeScript : MonoBehaviour
     }
     private void RandomizeUpgrade()
     {
-        int randomupgrade = Random.Range(0, 11);
+        int randomupgrade = Random.Range(0, 12);
         switch (randomupgrade)
         {
             case 0:
@@ -206,7 +206,6 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeName.text = "MONKE = STRONG";
                 UpgradeDescription.text = "+1 m/s max projectile throw speed";
                 cost = 1;
-                accumulable = true;
                 accumulable_max = -1;
                 break;
             case 9:
@@ -214,7 +213,6 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeName.text = "PREDATOR REFLEX";
                 UpgradeDescription.text = "Charge your throw force faster (+2m/s)";
                 cost = 1;
-                accumulable = true;
                 accumulable_max = -1;
                 break;
             case 10:
@@ -222,8 +220,14 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeName.text = "SNIPER MONKE";
                 UpgradeDescription.text = "Camera unzoom a little bit";
                 cost = 2;
-                accumulable = true;
                 accumulable_max = 7;
+                break;
+            case 11:
+                upgrade_id = "continue_aiming";
+                UpgradeName.text = "NINJA TRAINING";
+                UpgradeDescription.text = "Continue to aim while charging your shot";
+                cost = 3;
+                accumulable_max = 1;
                 break;
         }
         BuyButtonText.text = "$" + cost.ToString();
