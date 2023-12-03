@@ -112,6 +112,7 @@ public class UpgradeScript : MonoBehaviour
                 break;
             case "shield":
                 Monke_health.magic_shield_max += 1;
+                Monke_health.magic_shield += 1;
                 break;
             case "triple_shot":
                 Monke_script.triple_shot = true;
