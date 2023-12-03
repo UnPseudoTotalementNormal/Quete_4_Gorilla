@@ -17,6 +17,7 @@ public class GameScript : MonoBehaviour
     private Transform bloons_folder;
 
     private GameObject HUD;
+    private GameObject FastForwardButton;
 
     public float timer;
     [SerializeField] private float maxtimer = 15;
@@ -47,8 +48,13 @@ public class GameScript : MonoBehaviour
     public int monke_money = 0;
 
     public int camera_normal_zoom = 9;
+
+    [SerializeField] private GameObject gameover_screen;
+    private bool gameover = false;
     private void Start()
     {
+        gameover_screen.SetActive(false);
+        DataKeeper.wave_reached = wave;
         monkes_folder = transform.Find("Monkes");
         bloons_folder = transform.Find("Bloons");
         map_min = GameObject.Find("Map2").GetComponent<Map2script>().startX;
@@ -58,6 +64,7 @@ public class GameScript : MonoBehaviour
         shopmenu = HUD.transform.Find("Shop");
         cam = Camera.main;
         camZ = cam.transform.position.z;
+        FastForwardButton = HUD.transform.Find("FastForwardButton").gameObject;
         RandomizeWind();
         EndTurn();
     }
@@ -118,7 +125,7 @@ public class GameScript : MonoBehaviour
         hudwave.text = "Wave: " + wave.ToString();
         if (Memberturn != null)
         {
-            hudturn.text = teamturn + " " + numturn.ToString() + " turn";
+            hudturn.text = Memberturn.name + " turn";
             hudtimer.text = ((int)timer).ToString();
             hudmoney.text = "$" + monke_money.ToString();
         }
@@ -136,6 +143,8 @@ public class GameScript : MonoBehaviour
         {
             shopmenu.GetComponent<RectTransform>().localPosition = new Vector3(Mathf.Lerp(shopmenu.GetComponent<RectTransform>().localPosition.x, 215 * cam.orthographicSize, 1f * Time.fixedDeltaTime), 0, 0);
         }
+
+        FastForwardButton.SetActive((teamturn == "Bloon" && !inshop));
     }
 
     private void OpenShop()
@@ -227,6 +236,7 @@ public class GameScript : MonoBehaviour
                 break;
             default:
                 teamturn = "Monke";
+                Time.timeScale = 1;
                 break;
         }
         if (GetMember(true) == null)
@@ -234,20 +244,40 @@ public class GameScript : MonoBehaviour
             switch (teamturn)
             {
                 case "Monke":
-                    SceneManager.LoadScene("MainMenu");
+                    gameover = true;
+                    gameover_screen.SetActive(true);
+                    GameObject newobject = new GameObject();
+                    newobject.AddComponent<AudioPlayer>();
+                    newobject.GetComponent<AudioPlayer>().PlayAudio("Audio/DefeatSound", 0.8f);
+                    Time.timeScale = 0;
                     break;
                 case "Bloon":
                     OpenShop();
                     NextWave();
                     RefillMagicShields();
-                    FollowThis(GetMember(false));
-                    StartCoroutine(CodeAfterDelay(ChangeTeam, 2));
+                    List<Transform> bloonlist = new List<Transform>();
+                    for (int i = 0; i < bloons_folder.childCount; ++i)
+                    {
+                        bloonlist.Add(bloons_folder.GetChild(i).transform);
+                    }
+                    StartCoroutine(FollowAll(true, bloonlist));
                     break;
             }
             
         }
     }
 
+    private IEnumerator FollowAll(bool changeteam, List<Transform> followinglist)
+    {
+        while (followinglist.Count > 0)
+        {
+            FollowThis(followinglist[0].gameObject);
+            yield return new WaitForSeconds(1.5f);
+            followinglist.RemoveAt(0);
+        }
+        if (changeteam) ChangeTeam();
+        yield return null;
+    }
     private void setmembersready()
     {
         for (int i = 0; i < monkes_folder.childCount; i++)
@@ -298,6 +328,7 @@ public class GameScript : MonoBehaviour
     private void NextWave()
     {
         wave += 1;
+        DataKeeper.wave_reached = wave;
         switch (wave)
         {
             case 2:
@@ -404,5 +435,11 @@ public class GameScript : MonoBehaviour
             cam.transform.position += new Vector3(0, 0, -cam.transform.position.z + camZ);
         }
         cam.orthographicSize = Mathf.Max(cam.orthographicSize, camera_normal_zoom);
+    }
+
+    public void FastForwardPressed()
+    {
+        if (Time.timeScale == 1) Time.timeScale = 2;
+        else Time.timeScale = 1;
     }
 }

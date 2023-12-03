@@ -112,6 +112,7 @@ public class UpgradeScript : MonoBehaviour
                 break;
             case "shield":
                 Monke_health.magic_shield_max += 1;
+                Monke_health.magic_shield += 1;
                 break;
             case "triple_shot":
                 Monke_script.triple_shot = true;
@@ -131,6 +132,9 @@ public class UpgradeScript : MonoBehaviour
             case "camera_unzoom":
                 gamemanager.camera_normal_zoom += 2;
                 break;
+            case "continue_aiming":
+                Monke_script.continue_aiming = true;
+                break;
         }
 
         int upgrade_acc = 0;
@@ -142,7 +146,7 @@ public class UpgradeScript : MonoBehaviour
     }
     private void RandomizeUpgrade()
     {
-        int randomupgrade = Random.Range(0, 11);
+        int randomupgrade = Random.Range(0, 12);
         switch (randomupgrade)
         {
             case 0:
@@ -206,7 +210,6 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeName.text = "MONKE = STRONG";
                 UpgradeDescription.text = "+1 m/s max projectile throw speed";
                 cost = 1;
-                accumulable = true;
                 accumulable_max = -1;
                 break;
             case 9:
@@ -214,7 +217,6 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeName.text = "PREDATOR REFLEX";
                 UpgradeDescription.text = "Charge your throw force faster (+2m/s)";
                 cost = 1;
-                accumulable = true;
                 accumulable_max = -1;
                 break;
             case 10:
@@ -222,8 +224,14 @@ public class UpgradeScript : MonoBehaviour
                 UpgradeName.text = "SNIPER MONKE";
                 UpgradeDescription.text = "Camera unzoom a little bit";
                 cost = 2;
-                accumulable = true;
                 accumulable_max = 7;
+                break;
+            case 11:
+                upgrade_id = "continue_aiming";
+                UpgradeName.text = "NINJA TRAINING";
+                UpgradeDescription.text = "Continue to aim while charging your shot";
+                cost = 3;
+                accumulable_max = 1;
                 break;
         }
         BuyButtonText.text = "$" + cost.ToString();

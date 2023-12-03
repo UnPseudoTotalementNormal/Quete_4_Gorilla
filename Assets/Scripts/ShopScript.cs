@@ -14,17 +14,22 @@ public class ShopScript : MonoBehaviour
 
     public void OpenShop()
     {
-        MonkeDropdown.ClearOptions();
-        Transform all_monkes = GameObject.Find("GameManager").transform.Find("Monkes");
-        for (int i  = 0; i < all_monkes.childCount; ++i)
-        {
-            TMP_Dropdown.OptionData newitem = new TMP_Dropdown.OptionData();
-            newitem.text = all_monkes.GetChild(i).name;
-            MonkeDropdown.options.Add(newitem);
-        }
+        RefreshMonkeDropdown();
         for (int i = 0; i < Upgrades.childCount; ++i)
         {
             Upgrades.GetChild(i).GetComponent<UpgradeScript>().Regen();
+        }
+    }
+
+    public void RerollAll()
+    {
+        if (gamemanager.monke_money >= 3)
+        {
+            gamemanager.monke_money -= 3;
+            for (int i = 0; i < Upgrades.childCount; ++i)
+            {
+                Upgrades.GetChild(i).GetComponent<UpgradeScript>().Regen();
+            }
         }
     }
     void Start()
@@ -38,6 +43,7 @@ public class ShopScript : MonoBehaviour
 
     void Update()
     {
+
         if (!gamemanager.inshop) return;
         UpdateText();
     }
@@ -52,5 +58,42 @@ public class ShopScript : MonoBehaviour
     {
         gamemanager.inshop = false;
         Time.timeScale = 1;
+    }
+
+    private void RefreshMonkeDropdown()
+    {
+        MonkeDropdown.ClearOptions();
+        Transform all_monkes = GameObject.Find("GameManager").transform.Find("Monkes");
+        for (int i = 0; i < all_monkes.childCount; ++i)
+        {
+            TMP_Dropdown.OptionData newitem = new TMP_Dropdown.OptionData();
+            newitem.text = all_monkes.GetChild(i).name;
+            MonkeDropdown.options.Add(newitem);
+        }
+    }
+    public void RenameMonke(TMP_InputField inputfield)
+    {
+        if (inputfield.text == "") return;
+        Transform monkes = gamemanager.transform.Find("Monkes").transform ;
+        for (int i = 0; i < monkes.childCount; ++i)
+        {
+            if (inputfield.text == monkes.GetChild(i).name)
+            {
+                
+                return;
+            }
+        }
+        GetSelectedMonke().name = inputfield.text;
+        inputfield.text = "";
+        RefreshMonkeDropdown();
+    }
+
+    private Transform GetSelectedMonke() //get monke selected on the ChooseMonke Dropdown
+    {
+        TMP_Dropdown MonkeDropdown = GameObject.Find("HUD").transform.Find("Shop").transform.Find("ChooseMonke").GetComponent<TMP_Dropdown>();
+        string monkename = MonkeDropdown.options[MonkeDropdown.value].text;
+        Transform Monke = gamemanager.transform.Find("Monkes").transform.Find(monkename).transform;
+        return Monke;
+
     }
 }

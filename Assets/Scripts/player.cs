@@ -30,6 +30,7 @@ public class player : MonoBehaviour
     private bool OnGround;
     private Vector2 _mousepos;
     private float _mouseangle;
+    private float _oldmouseangle; //before charging
 
     private float _currentforce = 0;
     [SerializeField] public float _maxforce = 15;
@@ -52,6 +53,7 @@ public class player : MonoBehaviour
     public bool triple_shot = false;
     public int multi_shot = 1;
     public bool visual_aiming = false;
+    public bool continue_aiming = false;
 
     private int shot_this_turn = 0;
 
@@ -109,6 +111,7 @@ public class player : MonoBehaviour
                 }
                 break;
             case STATE.Charging:
+                if (continue_aiming) _oldmouseangle = _mouseangle;
                 if (visual_aiming)
                 {
                     _se_line.SetActive(true);
@@ -116,6 +119,7 @@ public class player : MonoBehaviour
                 }
                 _currentforce += _chargingspeed * Time.fixedDeltaTime;
                 transform.Find("Canvas").Find("ChargingBar").Find("ChargingMask").GetComponent<RectMask2D>().padding = new Vector4(0, 0, ((_maxforce - _currentforce) / (_maxforce - 0)) * 64, 0);
+                transform.Find("Canvas").transform.rotation = Quaternion.Euler(Vector3.forward * _oldmouseangle);
                 if (_currentforce >= _maxforce)
                 {
                     ShootFunction();
@@ -169,7 +173,7 @@ public class player : MonoBehaviour
         DrawDebugShooting();
         _se_position = RB.position;
         _se_oldpos.Clear();
-        Vector2 _shoot_vector = new Vector2((float)Math.Cos(_mouseangle * Mathf.Deg2Rad), (float)Math.Sin(_mouseangle * Mathf.Deg2Rad));
+        Vector2 _shoot_vector = new Vector2((float)Math.Cos(_oldmouseangle * Mathf.Deg2Rad), (float)Math.Sin(_oldmouseangle * Mathf.Deg2Rad));
         _shoot_vector *= _currentforce;
         _se_velocity = _shoot_vector;
 
@@ -220,6 +224,7 @@ public class player : MonoBehaviour
         {
             _currentforce = 0;
             _state = STATE.Charging;
+            _oldmouseangle = _mouseangle;
         }
         if (ctx.phase == InputActionPhase.Canceled && _state == STATE.Charging)
         {
@@ -248,9 +253,8 @@ public class player : MonoBehaviour
 
     private void ShootFunction(bool turn_actions = true)
     {
-        Vector2 Ppos = (Vector2)GetComponent<Transform>().position;
-        Vector2 shootvector = _mousepos - Ppos;
-        
+        Vector2 shootvector = new Vector2(Mathf.Cos((_oldmouseangle) * Mathf.PI / 180), Mathf.Sin((_oldmouseangle) * Mathf.PI / 180));
+
         GameObject newball;
         newball = Instantiate(balls, transform.position, transform.rotation);
         newball.GetComponent<BallScript>().SetAngle(shootvector.normalized, _currentforce);
@@ -258,13 +262,13 @@ public class player : MonoBehaviour
 
         if (triple_shot)
         {
-            Vector2 tripleshootvector = new Vector2(Mathf.Cos((_mouseangle + 10) * Mathf.PI / 180), Mathf.Sin((_mouseangle + 10) * Mathf.PI / 180));
+            Vector2 tripleshootvector = new Vector2(Mathf.Cos((_oldmouseangle + 10) * Mathf.PI / 180), Mathf.Sin((_oldmouseangle + 10) * Mathf.PI / 180));
             GameObject newball2;
             newball2 = Instantiate(balls, transform.position, transform.rotation);
             newball2.GetComponent<BallScript>().SetAngle(tripleshootvector.normalized, _currentforce);
             newball2.GetComponent<BallScript>().SetRadius(explosion_radius);
 
-            tripleshootvector = new Vector2(Mathf.Cos((_mouseangle - 10) * Mathf.PI / 180), Mathf.Sin((_mouseangle - 10) * Mathf.PI / 180));
+            tripleshootvector = new Vector2(Mathf.Cos((_oldmouseangle - 10) * Mathf.PI / 180), Mathf.Sin((_oldmouseangle - 10) * Mathf.PI / 180));
             GameObject newball3;
             newball3 = Instantiate(balls, transform.position, transform.rotation);
             newball3.GetComponent<BallScript>().SetAngle(tripleshootvector.normalized, _currentforce);
