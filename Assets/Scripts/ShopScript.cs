@@ -20,6 +20,18 @@ public class ShopScript : MonoBehaviour
             Upgrades.GetChild(i).GetComponent<UpgradeScript>().Regen();
         }
     }
+
+    public void RerollAll()
+    {
+        if (gamemanager.monke_money >= 3)
+        {
+            gamemanager.monke_money -= 3;
+            for (int i = 0; i < Upgrades.childCount; ++i)
+            {
+                Upgrades.GetChild(i).GetComponent<UpgradeScript>().Regen();
+            }
+        }
+    }
     void Start()
     {
         gamemanager = GameObject.Find("GameManager").GetComponent<GameScript>();
