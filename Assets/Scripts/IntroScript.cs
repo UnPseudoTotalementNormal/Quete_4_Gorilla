@@ -24,7 +24,6 @@ public class IntroScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        print(transform.position.x);
         switch (part)
         {
             case 1:
