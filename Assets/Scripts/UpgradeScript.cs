@@ -132,6 +132,9 @@ public class UpgradeScript : MonoBehaviour
             case "camera_unzoom":
                 gamemanager.camera_normal_zoom += 2;
                 break;
+            case "continue_aiming":
+                Monke_script.continue_aiming = true;
+                break;
         }
 
         int upgrade_acc = 0;
