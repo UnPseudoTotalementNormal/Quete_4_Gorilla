@@ -139,7 +139,7 @@ public class GameScript : MonoBehaviour
             shopmenu.GetComponent<RectTransform>().localPosition = new Vector3(Mathf.Lerp(shopmenu.GetComponent<RectTransform>().localPosition.x, 215 * cam.orthographicSize, 1f * Time.fixedDeltaTime), 0, 0);
         }
 
-        FastForwardButton.SetActive((teamturn == "Bloon"));
+        FastForwardButton.SetActive((teamturn == "Bloon" && !inshop));
     }
 
     private void OpenShop()
