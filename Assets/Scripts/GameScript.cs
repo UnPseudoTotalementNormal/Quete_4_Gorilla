@@ -245,14 +245,33 @@ public class GameScript : MonoBehaviour
                     OpenShop();
                     NextWave();
                     RefillMagicShields();
-                    FollowThis(GetMember(false));
-                    StartCoroutine(CodeAfterDelay(ChangeTeam, 2));
+                    //FollowThis(GetMember(false));
+
+                    List<Transform> bloonlist = new List<Transform>();
+                    for (int i = 0; i < bloons_folder.childCount; ++i)
+                    {
+                        bloonlist.Add(bloons_folder.GetChild(i).transform);
+                    }
+                    StartCoroutine(FollowAll(true, bloonlist));
+
+                    //StartCoroutine(CodeAfterDelay(ChangeTeam, 2));
                     break;
             }
             
         }
     }
 
+    private IEnumerator FollowAll(bool changeteam, List<Transform> followinglist)
+    {
+        while (followinglist.Count > 0)
+        {
+            FollowThis(followinglist[0].gameObject);
+            yield return new WaitForSeconds(1.5f);
+            followinglist.RemoveAt(0);
+        }
+        if (changeteam) ChangeTeam();
+        yield return null;
+    }
     private void setmembersready()
     {
         for (int i = 0; i < monkes_folder.childCount; i++)
