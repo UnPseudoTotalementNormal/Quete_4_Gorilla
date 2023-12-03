@@ -62,7 +62,6 @@ public class EnnemiScript : MonoBehaviour
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
-        _target = GameObject.Find("Monke1");
     }
     void Start()
     {
@@ -90,6 +89,7 @@ public class EnnemiScript : MonoBehaviour
         turncheck();
         if (!_myturn) 
         {
+            _target = null;
             _state = STATE.Idle;
             _walk_oposite_dir = false;
             _jumped = false;
@@ -97,6 +97,7 @@ public class EnnemiScript : MonoBehaviour
             HoleRightBuffer = 0;
             return; 
         }
+        if (_target == null) GetTarget();
         played_this_turn = true;
 
         switch (_state)
@@ -166,6 +167,22 @@ public class EnnemiScript : MonoBehaviour
         }
     }
 
+    private void GetTarget()
+    {
+        Transform Monkes = gamemanager.transform.Find("Monkes").transform;
+        float lowest_distance = 999999999;
+        GameObject closest_target = null;
+        for (int i = 0; i < Monkes.childCount; ++i)
+        {
+            float distance = (Monkes.GetChild(i).transform.position - transform.position).magnitude;
+            if (distance < lowest_distance)
+            {
+                lowest_distance = distance;
+                closest_target = Monkes.GetChild(i).gameObject;
+            }
+        }
+        _target = closest_target;
+    }
     private void gethighwall()
     {
         Vector2 testwallpos = (Vector2)transform.position;
