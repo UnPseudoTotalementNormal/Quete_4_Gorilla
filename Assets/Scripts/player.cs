@@ -262,13 +262,13 @@ public class player : MonoBehaviour
 
         if (triple_shot)
         {
-            Vector2 tripleshootvector = new Vector2(Mathf.Cos((_mouseangle + 10) * Mathf.PI / 180), Mathf.Sin((_mouseangle + 10) * Mathf.PI / 180));
+            Vector2 tripleshootvector = new Vector2(Mathf.Cos((_oldmouseangle + 10) * Mathf.PI / 180), Mathf.Sin((_oldmouseangle + 10) * Mathf.PI / 180));
             GameObject newball2;
             newball2 = Instantiate(balls, transform.position, transform.rotation);
             newball2.GetComponent<BallScript>().SetAngle(tripleshootvector.normalized, _currentforce);
             newball2.GetComponent<BallScript>().SetRadius(explosion_radius);
 
-            tripleshootvector = new Vector2(Mathf.Cos((_mouseangle - 10) * Mathf.PI / 180), Mathf.Sin((_mouseangle - 10) * Mathf.PI / 180));
+            tripleshootvector = new Vector2(Mathf.Cos((_oldmouseangle - 10) * Mathf.PI / 180), Mathf.Sin((_oldmouseangle - 10) * Mathf.PI / 180));
             GameObject newball3;
             newball3 = Instantiate(balls, transform.position, transform.rotation);
             newball3.GetComponent<BallScript>().SetAngle(tripleshootvector.normalized, _currentforce);
