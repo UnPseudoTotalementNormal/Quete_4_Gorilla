@@ -22,12 +22,12 @@ public class GameOverMenu : MonoBehaviour
     public void Restart()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("Scenes/Level1");
     }
 
     public void Main_menu()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Scenes/MainMenu");
     }
 }
