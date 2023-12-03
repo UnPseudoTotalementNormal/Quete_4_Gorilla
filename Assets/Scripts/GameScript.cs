@@ -48,8 +48,13 @@ public class GameScript : MonoBehaviour
     public int monke_money = 0;
 
     public int camera_normal_zoom = 9;
+
+    [SerializeField] private GameObject gameover_screen;
+    private bool gameover = false;
     private void Start()
     {
+        gameover_screen.SetActive(false);
+        DataKeeper.wave_reached = wave;
         monkes_folder = transform.Find("Monkes");
         bloons_folder = transform.Find("Bloons");
         map_min = GameObject.Find("Map2").GetComponent<Map2script>().startX;
@@ -239,22 +244,23 @@ public class GameScript : MonoBehaviour
             switch (teamturn)
             {
                 case "Monke":
-                    SceneManager.LoadScene("MainMenu");
+                    gameover = true;
+                    gameover_screen.SetActive(true);
+                    GameObject newobject = new GameObject();
+                    newobject.AddComponent<AudioPlayer>();
+                    newobject.GetComponent<AudioPlayer>().PlayAudio("Audio/DefeatSound", 0.8f);
+                    Time.timeScale = 0;
                     break;
                 case "Bloon":
                     OpenShop();
                     NextWave();
                     RefillMagicShields();
-                    //FollowThis(GetMember(false));
-
                     List<Transform> bloonlist = new List<Transform>();
                     for (int i = 0; i < bloons_folder.childCount; ++i)
                     {
                         bloonlist.Add(bloons_folder.GetChild(i).transform);
                     }
                     StartCoroutine(FollowAll(true, bloonlist));
-
-                    //StartCoroutine(CodeAfterDelay(ChangeTeam, 2));
                     break;
             }
             
@@ -322,6 +328,7 @@ public class GameScript : MonoBehaviour
     private void NextWave()
     {
         wave += 1;
+        DataKeeper.wave_reached = wave;
         switch (wave)
         {
             case 2:
