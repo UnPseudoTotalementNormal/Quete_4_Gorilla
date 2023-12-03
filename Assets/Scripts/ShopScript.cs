@@ -31,6 +31,7 @@ public class ShopScript : MonoBehaviour
 
     void Update()
     {
+
         if (!gamemanager.inshop) return;
         UpdateText();
     }

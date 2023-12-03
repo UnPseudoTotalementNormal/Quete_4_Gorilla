@@ -17,6 +17,7 @@ public class GameScript : MonoBehaviour
     private Transform bloons_folder;
 
     private GameObject HUD;
+    private GameObject FastForwardButton;
 
     public float timer;
     [SerializeField] private float maxtimer = 15;
@@ -58,6 +59,7 @@ public class GameScript : MonoBehaviour
         shopmenu = HUD.transform.Find("Shop");
         cam = Camera.main;
         camZ = cam.transform.position.z;
+        FastForwardButton = HUD.transform.Find("FastForwardButton").gameObject;
         RandomizeWind();
         EndTurn();
     }
@@ -136,6 +138,8 @@ public class GameScript : MonoBehaviour
         {
             shopmenu.GetComponent<RectTransform>().localPosition = new Vector3(Mathf.Lerp(shopmenu.GetComponent<RectTransform>().localPosition.x, 215 * cam.orthographicSize, 1f * Time.fixedDeltaTime), 0, 0);
         }
+
+        FastForwardButton.SetActive((teamturn == "Bloon"));
     }
 
     private void OpenShop()
@@ -227,6 +231,7 @@ public class GameScript : MonoBehaviour
                 break;
             default:
                 teamturn = "Monke";
+                Time.timeScale = 1;
                 break;
         }
         if (GetMember(true) == null)
@@ -404,5 +409,11 @@ public class GameScript : MonoBehaviour
             cam.transform.position += new Vector3(0, 0, -cam.transform.position.z + camZ);
         }
         cam.orthographicSize = Mathf.Max(cam.orthographicSize, camera_normal_zoom);
+    }
+
+    public void FastForwardPressed()
+    {
+        if (Time.timeScale == 1) Time.timeScale = 2;
+        else Time.timeScale = 1;
     }
 }
